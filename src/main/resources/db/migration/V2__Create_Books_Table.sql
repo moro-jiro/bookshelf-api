@@ -1,0 +1,8 @@
+CREATE TABLE books
+(
+    id         SERIAL PRIMARY KEY,
+    title      VARCHAR(255) NOT NULL,
+    author_id  INT          NOT NULL REFERENCES authors (id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
