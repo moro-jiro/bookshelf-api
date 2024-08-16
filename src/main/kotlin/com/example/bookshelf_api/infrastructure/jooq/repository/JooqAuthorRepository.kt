@@ -15,15 +15,12 @@ import java.time.LocalDateTime
 class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
 
     override fun createAuthor(author: Author): Int {
-        val now = LocalDate.now()
 
         return dsl.insertInto(AuthorTable.AUTHOR)
             .set(AuthorTable.AUTHOR.FIRST_NAME, author.firstName)
             .set(AuthorTable.AUTHOR.LAST_NAME, author.lastName)
             .set(AuthorTable.AUTHOR.BIRTH_DATE, author.birthDate)
             .set(AuthorTable.AUTHOR.GENDER, author.gender)
-            .set(AuthorTable.AUTHOR.CREATED_AT, author.createdAt ?: now.atStartOfDay())
-            .set(AuthorTable.AUTHOR.UPDATED_AT, author.updatedAt ?: now.atStartOfDay())
             .returning(AuthorTable.AUTHOR.ID)
             .fetchOne()
             ?.getValue(AuthorTable.AUTHOR.ID)
