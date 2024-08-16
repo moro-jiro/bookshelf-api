@@ -185,7 +185,7 @@ class BookServiceTest {
         val updatedBook = existingBook.copy(title = newTitle)
 
         `when`(bookRepository.findBookById(bookId)).thenReturn(Pair(existingBook, author))
-        `when`(bookRepository.createBook(updatedBook)).thenReturn(updatedBook)
+        `when`(bookRepository.updateBook(updatedBook)).thenReturn(updatedBook)
 
         val response = bookService.updateBookTitle(bookId, newTitle)
 
@@ -194,7 +194,7 @@ class BookServiceTest {
         assertEquals(bookId, response.id)
 
         verify(bookRepository).findBookById(bookId)
-        verify(bookRepository).createBook(updatedBook)
+        verify(bookRepository).updateBook(updatedBook)
     }
 
     @Test
@@ -221,7 +221,7 @@ class BookServiceTest {
         assertEquals("404 NOT_FOUND \"書籍が見つかりません\"", exception.message)
 
         verify(bookRepository).findBookById(bookId)
-        verify(bookRepository, never()).createBook(fictitiousBook)
+        verify(bookRepository, never()).updateBook(fictitiousBook)
     }
 
     @Test
@@ -265,5 +265,67 @@ class BookServiceTest {
         }
 
         assertEquals("400 BAD_REQUEST \"書籍名は必須です\"", exception.message)
+    }
+
+    @Test
+    fun `getBooksByAuthorId should return a list of OnlyBookResponse`() {
+        val authorId = 1
+        val books = listOf(
+            Book(
+                id = 1,
+                title = "Book Title 1",
+                authorId = authorId,
+                publicationDate = LocalDate.of(2022, 1, 1),
+                publisher = "Publisher 1",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            ),
+            Book(
+                id = 2,
+                title = "Book Title 2",
+                authorId = authorId,
+                publicationDate = LocalDate.of(2023, 1, 1),
+                publisher = "Publisher 2",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            )
+        )
+
+        `when`(bookRepository.findBooksByAuthorId(authorId)).thenReturn(books)
+
+        val response = bookService.getBooksByAuthorId(authorId)
+
+        assertNotNull(response)
+        assertEquals(2, response.size)
+
+        val firstBookResponse = response[0]
+        assertEquals(1, firstBookResponse.id)
+        assertEquals("Book Title 1", firstBookResponse.title)
+        assertEquals(authorId, firstBookResponse.authorId)
+        assertEquals(LocalDate.of(2022, 1, 1), firstBookResponse.publicationDate)
+        assertEquals("Publisher 1", firstBookResponse.publisher)
+
+        val secondBookResponse = response[1]
+        assertEquals(2, secondBookResponse.id)
+        assertEquals("Book Title 2", secondBookResponse.title)
+        assertEquals(authorId, secondBookResponse.authorId)
+        assertEquals(LocalDate.of(2023, 1, 1), secondBookResponse.publicationDate)
+        assertEquals("Publisher 2", secondBookResponse.publisher)
+
+        verify(bookRepository).findBooksByAuthorId(authorId)
+    }
+
+    @Test
+    fun `getBooksByAuthorId should return an empty list when no books are found`() {
+        val authorId = 1
+
+        `when`(bookRepository.findBooksByAuthorId(authorId)).thenReturn(emptyList())
+
+        val response = bookService.getBooksByAuthorId(authorId)
+
+        assertNotNull(response)
+        assertTrue(response.isEmpty())
+
+        verify(bookRepository).findBooksByAuthorId(authorId)
     }
 }

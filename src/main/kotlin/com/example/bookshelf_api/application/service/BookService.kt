@@ -85,15 +85,16 @@ class BookService(
 
         val updatedBook = book.copy(title = title)
 
-        bookRepository.createBook(updatedBook)
+        val updatedBookResult = bookRepository.updateBook(updatedBook)
 
         return OnlyBookResponse(
-            id = updatedBook.id!!,
-            title = updatedBook.title,
-            publicationDate = updatedBook.publicationDate,
-            publisher = updatedBook.publisher,
-            createdAt = updatedBook.createdAt,
-            updatedAt = updatedBook.updatedAt
+            id = updatedBookResult.id ?: throw IllegalArgumentException("Book ID cannot be null"),
+            title = updatedBookResult.title,
+            authorId = updatedBookResult.authorId,
+            publicationDate = updatedBookResult.publicationDate,
+            publisher = updatedBookResult.publisher,
+            createdAt = updatedBookResult.createdAt,
+            updatedAt = updatedBookResult.updatedAt
         )
     }
 
@@ -107,6 +108,23 @@ class BookService(
             OnlyBookResponse(
                 id = book.id!!,
                 title = book.title,
+                authorId = book.authorId,
+                publicationDate = book.publicationDate,
+                publisher = book.publisher,
+                createdAt = book.createdAt,
+                updatedAt = book.updatedAt
+            )
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun getBooksByAuthorId(authorId: Int): List<OnlyBookResponse> {
+        val books = bookRepository.findBooksByAuthorId(authorId)
+        return books.map { book ->
+            OnlyBookResponse (
+                id = book.id ?: throw IllegalArgumentException("Book ID cannot be null"),
+                title = book.title,
+                authorId = book.authorId,
                 publicationDate = book.publicationDate,
                 publisher = book.publisher,
                 createdAt = book.createdAt,

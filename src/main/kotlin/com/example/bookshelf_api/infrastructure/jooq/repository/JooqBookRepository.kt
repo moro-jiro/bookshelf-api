@@ -50,4 +50,25 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
             .fetchInto(Book::class.java)
     }
 
+    override fun updateBook(book: Book): Book {
+        val now = LocalDateTime.now()
+        val updatedBook = dsl.update(BookTable.BOOK)
+            .set(BookTable.BOOK.TITLE, book.title)
+            .set(BookTable.BOOK.PUBLICATION_DATE, book.publicationDate)
+            .set(BookTable.BOOK.PUBLISHER, book.publisher)
+            .set(BookTable.BOOK.UPDATED_AT, now)
+            .where(BookTable.BOOK.ID.eq(book.id ?: throw IllegalArgumentException("Book ID cannot be null")))
+            .returning()
+            .fetchOne()
+            ?.into(Book::class.java)
+            ?: throw RuntimeException("書籍の更新に失敗しました")
+
+        return updatedBook
+    }
+
+    override fun findBooksByAuthorId(authorId: Int): List<Book> {
+        return dsl.selectFrom(BookTable.BOOK)
+            .where(BookTable.BOOK.AUTHOR_ID.eq(authorId))
+            .fetchInto(Book::class.java)
+    }
 }

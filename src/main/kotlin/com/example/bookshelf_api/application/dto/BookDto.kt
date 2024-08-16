@@ -34,6 +34,7 @@ data class BookResponse(
 data class OnlyBookResponse(
     val id: Int,
     val title: String,
+    val authorId: Int,
     val publicationDate: LocalDate,
     val publisher: String,
     val createdAt: LocalDateTime?,

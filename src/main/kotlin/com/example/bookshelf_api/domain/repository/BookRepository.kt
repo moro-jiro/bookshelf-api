@@ -8,4 +8,6 @@ interface BookRepository {
     fun createBook(book: Book): Book
     fun findBookById(id: Int): Pair<Book, Author>?
     fun findBooksByTitle(title: String): List<Book>
+    fun updateBook(book: Book): Book
+    fun findBooksByAuthorId(authorId: Int): List<Book>
 }
