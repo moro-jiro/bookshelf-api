@@ -1,6 +1,7 @@
 package com.example.bookshelf_api.application.service
 
 import com.example.bookshelf_api.application.dto.AuthorDto
+import com.example.bookshelf_api.application.dto.AuthorSearchDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
 import org.junit.jupiter.api.Test
@@ -58,7 +59,11 @@ class AuthorServiceTest {
             gender = "Male"
         )
 
-        `when`(authorRepository.createAuthor(any(Author::class.java) ?: Author())).thenThrow(RuntimeException("Database error"))
+        `when`(
+            authorRepository.createAuthor(
+                any(Author::class.java) ?: Author()
+            )
+        ).thenThrow(RuntimeException("Database error"))
 
         val exception = assertFailsWith<ResponseStatusException> {
             authorService.createAuthor(authorDto)
@@ -207,5 +212,55 @@ class AuthorServiceTest {
 
         verify(authorRepository).findAuthorById(authorId)
         verify(authorRepository).updateAuthor(updatedAuthor)
+    }
+
+    @Test
+    fun `searchAuthors should return list of AuthorResponse`() {
+        val searchDto = AuthorSearchDto(
+            lastName = "Doe",
+            firstName = "Jane",
+            birthDate = null,
+            gender = null
+        )
+
+        val authors = listOf(
+            Author(
+                id = 1,
+                firstName = "Jane",
+                lastName = "Doe",
+                birthDate = LocalDate.of(1985, 5, 5),
+                gender = "FEMALE",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            ),
+            Author(
+                id = 2,
+                firstName = "John",
+                lastName = "Doe",
+                birthDate = LocalDate.of(1990, 1, 1),
+                gender = "MALE",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            )
+        )
+
+        `when`(authorRepository.searchAuthors(searchDto)).thenReturn(authors)
+
+        val result = authorService.searchAuthors(searchDto)
+
+        assertEquals(2, result.size)
+        assertEquals(1, result[0].id)
+        assertEquals("Jane", result[0].firstName)
+        assertEquals("Doe", result[0].lastName)
+        assertEquals(LocalDate.of(1985, 5, 5), result[0].birthDate)
+        assertEquals("FEMALE", result[0].gender)
+
+        assertEquals(2, result[1].id)
+        assertEquals("John", result[1].firstName)
+        assertEquals("Doe", result[1].lastName)
+        assertEquals(LocalDate.of(1990, 1, 1), result[1].birthDate)
+        assertEquals("MALE", result[1].gender)
+
+        verify(authorRepository).searchAuthors(searchDto)
     }
 }

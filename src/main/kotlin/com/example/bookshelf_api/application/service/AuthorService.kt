@@ -2,6 +2,7 @@ package com.example.bookshelf_api.application.service
 
 import com.example.bookshelf_api.application.dto.AuthorDto
 import com.example.bookshelf_api.application.dto.AuthorResponse
+import com.example.bookshelf_api.application.dto.AuthorSearchDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
 import org.springframework.stereotype.Service
@@ -72,6 +73,22 @@ class AuthorService(private val authorRepository: AuthorRepository) {
             createdAt = updatedAuthor.createdAt,
             updatedAt = updatedAuthor.updatedAt
         )
+    }
+
+    @Transactional
+    fun searchAuthors(searchDto: AuthorSearchDto): List<AuthorResponse> {
+        val authors = authorRepository.searchAuthors(searchDto)
+        return authors.map { author ->
+            AuthorResponse(
+                id = author.id ?: throw IllegalArgumentException("Author ID cannot be null"),
+                firstName = author.firstName,
+                lastName = author.lastName,
+                birthDate = author.birthDate,
+                gender = author.gender,
+                createdAt = author.createdAt,
+                updatedAt = author.updatedAt
+            )
+        }
     }
 
 }

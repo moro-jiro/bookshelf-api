@@ -1,7 +1,9 @@
 package com.example.bookshelf_api.infrastructure.jooq.repository
 
+import com.example.bookshelf_api.application.dto.AuthorSearchDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
+import org.jooq.Condition
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author as AuthorTable
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -60,5 +62,27 @@ class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
             .set(authorTable.UPDATED_AT, LocalDateTime.now())
             .where(authorTable.ID.eq(author.id))
             .execute()
+    }
+
+    override fun searchAuthors(searchDto: AuthorSearchDto): List<Author> {
+        val authorTable = AuthorTable.AUTHOR
+
+        val conditions = mutableListOf<Condition>()
+
+        val nameCondition = authorTable.LAST_NAME.likeIgnoreCase("%${searchDto.lastName}%")
+            .or(authorTable.FIRST_NAME.likeIgnoreCase("%${searchDto.firstName}%"))
+        conditions.add(nameCondition)
+
+        searchDto.birthDate?.let {
+            conditions.add(authorTable.BIRTH_DATE.eq(it))
+        }
+        searchDto.gender?.let {
+            conditions.add(authorTable.GENDER.eq(it))
+        }
+
+        return dsl.selectFrom(authorTable)
+            .where(conditions)
+            .orderBy(authorTable.LAST_NAME, authorTable.FIRST_NAME)
+            .fetchInto(Author::class.java)
     }
 }

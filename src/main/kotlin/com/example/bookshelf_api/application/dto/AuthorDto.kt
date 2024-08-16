@@ -22,6 +22,17 @@ data class AuthorDto(
     val gender: String
 )
 
+data class AuthorSearchDto(
+    @field:NotBlank(message = "名字は必須です")
+    val lastName: String,
+
+    @field:NotBlank(message = "名前は必須です")
+    val firstName: String,
+
+    val birthDate: LocalDate? = null,
+    val gender: String? = null
+)
+
 data class AuthorResponse(
     val id: Int,
     val firstName: String,
