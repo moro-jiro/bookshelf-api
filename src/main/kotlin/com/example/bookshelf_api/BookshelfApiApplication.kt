@@ -1,4 +1,4 @@
-package com.example.bookshelf.bookshelf_api
+package com.example.bookshelf_api
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
