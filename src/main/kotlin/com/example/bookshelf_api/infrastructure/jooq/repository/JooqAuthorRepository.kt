@@ -3,10 +3,10 @@ package com.example.bookshelf_api.infrastructure.jooq.repository
 import com.example.bookshelf_api.application.dto.AuthorSearchDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
+import com.example.bookshelf_api.infrastructure.jooq.generated.Tables.AUTHOR
 import org.jooq.Condition
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author as AuthorTable
 import org.jooq.DSLContext
-import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -41,15 +41,9 @@ class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
     }
 
     override fun findAuthorById(id: Int): Author? {
-        val authorTable = DSL.table("authors")
-        val record = dsl.select()
-            .from(authorTable)
-            .where(DSL.field("id").eq(id))
-            .fetchOne()
-
-        return record?.let {
-            it.into(authorTable).into(Author::class.java)
-        }
+        return dsl.selectFrom(AUTHOR)
+            .where(AUTHOR.ID.eq(id))
+            .fetchOneInto(Author::class.java)
     }
 
     override fun updateAuthor(author: Author) {
