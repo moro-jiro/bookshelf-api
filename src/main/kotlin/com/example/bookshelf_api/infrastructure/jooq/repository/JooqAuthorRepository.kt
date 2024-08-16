@@ -7,6 +7,7 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Repository
 class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
@@ -47,5 +48,17 @@ class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
         return record?.let {
             it.into(authorTable).into(Author::class.java)
         }
+    }
+
+    override fun updateAuthor(author: Author) {
+        val authorTable = AuthorTable.AUTHOR
+        dsl.update(authorTable)
+            .set(authorTable.FIRST_NAME, author.firstName)
+            .set(authorTable.LAST_NAME, author.lastName)
+            .set(authorTable.BIRTH_DATE, author.birthDate)
+            .set(authorTable.GENDER, author.gender)
+            .set(authorTable.UPDATED_AT, LocalDateTime.now())
+            .where(authorTable.ID.eq(author.id))
+            .execute()
     }
 }

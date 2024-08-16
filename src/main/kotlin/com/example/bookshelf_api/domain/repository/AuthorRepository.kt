@@ -7,4 +7,5 @@ interface AuthorRepository {
     fun createAuthor(author: Author): Int
     fun findAuthorByDetails(firstName: String, lastName: String, birthDate: LocalDate): Author?
     fun findAuthorById(id: Int): Author?
+    fun updateAuthor(author: Author)
 }

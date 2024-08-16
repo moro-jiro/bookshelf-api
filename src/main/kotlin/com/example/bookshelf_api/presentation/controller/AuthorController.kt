@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/authors")
+@RequestMapping("/api/authors")
 class AuthorController(private val authorService: AuthorService) {
 
-    @PostMapping
+    @PostMapping("/register")
     fun createAuthor(@RequestBody authorDto: AuthorDto): ResponseEntity<AuthorResponse> {
         try {
             val authorResponse = authorService.createAuthor(authorDto)
@@ -20,5 +20,14 @@ class AuthorController(private val authorService: AuthorService) {
         } catch (ex: ResponseStatusException) {
             throw ex
         }
+    }
+
+    @PutMapping("/{id}")
+    fun updateAuthor(
+        @PathVariable id: Int,
+        @RequestBody authorDto: AuthorDto
+    ): ResponseEntity<AuthorResponse> {
+        val updatedAuthor = authorService.updateAuthor(id, authorDto)
+        return ResponseEntity.ok(updatedAuthor)
     }
 }

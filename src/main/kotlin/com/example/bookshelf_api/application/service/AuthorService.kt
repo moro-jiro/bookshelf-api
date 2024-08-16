@@ -44,4 +44,34 @@ class AuthorService(private val authorRepository: AuthorRepository) {
             updatedAt = author.updatedAt
         )
     }
+
+    @Transactional
+    fun updateAuthor(id: Int, authorDto: AuthorDto): AuthorResponse {
+        val existingAuthor = authorRepository.findAuthorById(id)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "著者が見つかりません")
+
+        val updatedAuthor = existingAuthor.copy(
+            firstName = authorDto.firstName.ifBlank { existingAuthor.firstName },
+            lastName = authorDto.lastName.ifBlank { existingAuthor.lastName },
+            birthDate = authorDto.birthDate,
+            gender = authorDto.gender
+        )
+
+        try {
+            authorRepository.updateAuthor(updatedAuthor)
+        } catch (ex: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "著者の更新中にエラーが発生しました: ${ex.message}")
+        }
+
+        return AuthorResponse(
+            id = updatedAuthor.id ?: throw IllegalArgumentException("Author ID cannot be null"),
+            firstName = updatedAuthor.firstName,
+            lastName = updatedAuthor.lastName,
+            birthDate = updatedAuthor.birthDate,
+            gender = updatedAuthor.gender,
+            createdAt = updatedAuthor.createdAt,
+            updatedAt = updatedAuthor.updatedAt
+        )
+    }
+
 }
