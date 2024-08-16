@@ -1,6 +1,6 @@
 package com.example.bookshelf_api.presentation.controller
 
-import com.example.bookshelf_api.application.dto.BookCreationRequest
+import com.example.bookshelf_api.application.dto.BookDto
 import com.example.bookshelf_api.application.dto.BookResponse
 import com.example.bookshelf_api.application.dto.OnlyBookResponse
 import com.example.bookshelf_api.application.service.BookService
@@ -15,7 +15,7 @@ import java.time.LocalDate
 class BookController(private val bookService: BookService) {
 
     @PostMapping("/register")
-    fun registerBook(@Valid @RequestBody bookRequest: BookCreationRequest): ResponseEntity<BookResponse> {
+    fun registerBook(@Valid @RequestBody bookRequest: BookDto): ResponseEntity<BookResponse> {
         return try {
             val bookResponse = bookService.createBook(bookRequest)
             ResponseEntity.ok(bookResponse)
@@ -27,12 +27,10 @@ class BookController(private val bookService: BookService) {
     @PutMapping("/{id}")
     fun updateBook(
         @PathVariable id: Int,
-        @RequestParam(required = false) title: String?,
-        @RequestParam(required = false) publicationDate: LocalDate?,
-        @RequestParam(required = false) publisher: String?
+        @RequestBody bookDto: BookDto
     ): ResponseEntity<OnlyBookResponse> {
         return try {
-            val updatedBook = bookService.updateBook(id, title, publicationDate, publisher)
+            val updatedBook = bookService.updateBook(id, bookDto)
             ResponseEntity.ok(updatedBook)
         } catch (ex: Exception) {
             throw ex

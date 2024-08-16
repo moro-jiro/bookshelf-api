@@ -4,7 +4,7 @@ import java.time.LocalDate
 import jakarta.validation.constraints.*
 import java.time.LocalDateTime
 
-data class BookCreationRequest(
+data class BookDto(
     @field:NotBlank(message = "タイトルは必須です")
     @field:Size(max = 255, message = "タイトルは255文字以内で入力してください")
     val title: String,

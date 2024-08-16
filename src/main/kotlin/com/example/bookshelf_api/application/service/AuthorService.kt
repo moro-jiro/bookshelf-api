@@ -52,8 +52,8 @@ class AuthorService(private val authorRepository: AuthorRepository) {
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "著者が見つかりません")
 
         val updatedAuthor = existingAuthor.copy(
-            firstName = authorDto.firstName.ifBlank { existingAuthor.firstName },
-            lastName = authorDto.lastName.ifBlank { existingAuthor.lastName },
+            firstName = authorDto.firstName,
+            lastName = authorDto.lastName,
             birthDate = authorDto.birthDate,
             gender = authorDto.gender
         )

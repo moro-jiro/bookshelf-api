@@ -18,7 +18,7 @@ class BookService(
 ) {
 
     @Transactional
-    fun createBook(bookRequest: BookCreationRequest): BookResponse {
+    fun createBook(bookRequest: BookDto): BookResponse {
         val authorId = findOrCreateAuthor(bookRequest.author)
 
         val book = Book(
@@ -80,18 +80,14 @@ class BookService(
     }
 
     @Transactional
-    fun updateBook(id: Int, title: String?, publicationDate: LocalDate?, publisher: String?): OnlyBookResponse {
+    fun updateBook(id: Int, bookDto: BookDto): OnlyBookResponse {
         val existingBook = bookRepository.findBookById(id)?.first
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
 
-        require(title != null || publicationDate != null || publisher != null) {
-            "少なくとも1つのフィールドは提供する必要があります。"
-        }
-
         val updatedBook = existingBook.copy(
-            title = title ?: existingBook.title,
-            publicationDate = publicationDate ?: existingBook.publicationDate,
-            publisher = publisher ?: existingBook.publisher
+            title = bookDto.title,
+            publicationDate = bookDto.publicationDate,
+            publisher = bookDto.publisher
         )
 
         bookRepository.updateBook(updatedBook)

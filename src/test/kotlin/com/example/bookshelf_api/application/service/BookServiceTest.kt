@@ -1,7 +1,7 @@
 package com.example.bookshelf_api.application.service
 
 import com.example.bookshelf_api.application.dto.AuthorDto
-import com.example.bookshelf_api.application.dto.BookCreationRequest
+import com.example.bookshelf_api.application.dto.BookDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.model.Book
 import com.example.bookshelf_api.domain.repository.AuthorRepository
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
-import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,7 +29,7 @@ class BookServiceTest {
             gender = "Male"
         )
 
-        val bookRequest = BookCreationRequest(
+        val bookRequest = BookDto(
             title = "Sample Book",
             author = authorDto,
             publicationDate = LocalDate.of(2024, 8, 1),
@@ -121,7 +120,7 @@ class BookServiceTest {
             gender = "Female"
         )
 
-        val bookRequest = BookCreationRequest(
+        val bookRequest = BookDto(
             title = "New Book",
             author = authorDto,
             publicationDate = LocalDate.of(2024, 8, 1),
@@ -162,10 +161,17 @@ class BookServiceTest {
     @Test
     fun `updateBook should update the book's fields and return OnlyBookResponse`() {
         val bookId = 1
-        val newTitle = "New Title"
-        val newPublicationDate = LocalDate.of(2022, 1, 1)
-        val newPublisher = "New Publisher"
-
+        val bookDto = BookDto(
+            title = "Updated Title",
+            author = AuthorDto(
+                firstName = "John",
+                lastName = "Doe",
+                birthDate = LocalDate.of(1970, 1, 1),
+                gender = "Male"
+            ),
+            publicationDate = LocalDate.of(2021, 1, 1),
+            publisher = "Updated Publisher"
+        )
         val existingBook = Book(
             id = bookId,
             title = "Old Title",
@@ -177,9 +183,9 @@ class BookServiceTest {
         )
 
         val updatedBook = existingBook.copy(
-            title = newTitle,
-            publicationDate = newPublicationDate,
-            publisher = newPublisher
+            title = bookDto.title,
+            publicationDate = bookDto.publicationDate,
+            publisher = bookDto.publisher
         )
 
         val author = Author(
@@ -195,12 +201,12 @@ class BookServiceTest {
         `when`(bookRepository.findBookById(bookId)).thenReturn(Pair(existingBook, author))
         `when`(bookRepository.updateBook(updatedBook)).thenReturn(updatedBook)
 
-        val response = bookService.updateBook(bookId, newTitle, newPublicationDate, newPublisher)
+        val response = bookService.updateBook(bookId, bookDto)
 
         assertNotNull(response)
-        assertEquals(newTitle, response.title)
-        assertEquals(newPublicationDate, response.publicationDate)
-        assertEquals(newPublisher, response.publisher)
+        assertEquals(bookDto.title, response.title)
+        assertEquals(bookDto.publicationDate, response.publicationDate)
+        assertEquals(bookDto.publisher, response.publisher)
         assertEquals(bookId, response.id)
 
         verify(bookRepository).findBookById(bookId)
@@ -210,7 +216,17 @@ class BookServiceTest {
     @Test
     fun `updateBook should throw ResponseStatusException when book is not found`() {
         val bookId = 1
-        val newTitle = "New Title"
+        val bookDto = BookDto(
+            title = "Updated Title",
+            author = AuthorDto(
+                firstName = "John",
+                lastName = "Doe",
+                birthDate = LocalDate.of(1970, 1, 1),
+                gender = "Male"
+            ),
+            publicationDate = LocalDate.of(2021, 1, 1),
+            publisher = "Updated Publisher"
+        )
 
         val fictitiousBook = Book(
             id = bookId,
@@ -225,57 +241,12 @@ class BookServiceTest {
         `when`(bookRepository.findBookById(bookId)).thenReturn(null)
 
         val exception = assertThrows<ResponseStatusException> {
-            bookService.updateBook(bookId, newTitle, null, null)
+            bookService.updateBook(bookId, bookDto)
         }
 
-        assertEquals(HttpStatus.NOT_FOUND, exception.statusCode)
-        assertEquals("書籍が見つかりません", exception.reason)
+        assertEquals("404 NOT_FOUND \"書籍が見つかりません\"", exception.message)
 
         verify(bookRepository).findBookById(bookId)
-        verify(bookRepository, never()).updateBook(fictitiousBook)
-    }
-
-    @Test
-    fun `updateBook should throw IllegalArgumentException when no fields are provided`() {
-        val bookId = 1
-
-        val existingBook = Book(
-            id = bookId,
-            title = "Old Title",
-            authorId = 1,
-            publicationDate = LocalDate.of(2020, 1, 1),
-            publisher = "Old Publisher",
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
-        )
-
-        val fictitiousBook = Book(
-            id = bookId,
-            title = "Old Title",
-            authorId = 1,
-            publicationDate = LocalDate.of(2020, 1, 1),
-            publisher = "Old Publisher",
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
-        )
-
-        val author = Author(
-            id = 1,
-            firstName = "John",
-            lastName = "Doe",
-            birthDate = LocalDate.of(1970, 1, 1),
-            gender = "Male",
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
-        )
-
-        `when`(bookRepository.findBookById(bookId)).thenReturn(Pair(existingBook, author))
-        val exception = assertThrows<IllegalArgumentException> {
-            bookService.updateBook(bookId, null, null, null)
-        }
-
-        assertEquals("少なくとも1つのフィールドは提供する必要があります。", exception.message)
-
         verify(bookRepository, never()).updateBook(fictitiousBook)
     }
 
