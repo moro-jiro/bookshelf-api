@@ -15,19 +15,33 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
 
     override fun createBook(book: Book): Book {
         val now = LocalDateTime.now()
-        val insertedBook = dsl.insertInto(BookTable.BOOK)
+        val result = dsl.insertInto(BookTable.BOOK)
             .set(BookTable.BOOK.TITLE, book.title)
             .set(BookTable.BOOK.AUTHOR_ID, book.authorId)
             .set(BookTable.BOOK.PUBLICATION_DATE, book.publicationDate)
             .set(BookTable.BOOK.PUBLISHER, book.publisher)
             .set(BookTable.BOOK.UPDATED_AT, now)
-            .returning()
+            .returning(BookTable.BOOK.ID, BookTable.BOOK.TITLE, BookTable.BOOK.AUTHOR_ID, BookTable.BOOK.PUBLICATION_DATE, BookTable.BOOK.PUBLISHER, BookTable.BOOK.CREATED_AT, BookTable.BOOK.UPDATED_AT)
             .fetchOne()
-            ?.into(Book::class.java)
-            ?: throw RuntimeException("書籍の登録に失敗しました")
 
-        return insertedBook
+        // result が null の場合のチェック
+        if (result == null) {
+            throw RuntimeException("書籍の登録に失敗しました")
+        }
+
+        // 手動で値を取り出して Book オブジェクトを作成
+        return Book(
+            id = result[BookTable.BOOK.ID],
+            title = result[BookTable.BOOK.TITLE],
+            authorId = result[BookTable.BOOK.AUTHOR_ID],
+            publicationDate = result[BookTable.BOOK.PUBLICATION_DATE],
+            publisher = result[BookTable.BOOK.PUBLISHER],
+            createdAt = result[BookTable.BOOK.CREATED_AT],
+            updatedAt = result[BookTable.BOOK.UPDATED_AT]
+        )
     }
+
+
 
     override fun findBookById(id: Int): Pair<Book, Author>? {
         val bookTable = BookTable.BOOK
@@ -38,7 +52,16 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
             .join(authorTable).on(bookTable.AUTHOR_ID.eq(authorTable.ID))
             .where(bookTable.ID.eq(id))
             .fetchOne { record ->
-                val book = record.into(bookTable).into(Book::class.java)
+                val book = Book(
+                    id = record[bookTable.ID],
+                    title = record[bookTable.TITLE],
+                    authorId = record[bookTable.AUTHOR_ID],
+                    publicationDate = record[bookTable.PUBLICATION_DATE],
+                    publisher = record[bookTable.PUBLISHER],
+                    createdAt = record[bookTable.CREATED_AT],
+                    updatedAt = record[bookTable.UPDATED_AT]
+                )
+
                 val author = record.into(authorTable).into(Author::class.java)
                 Pair(book, author)
             }
