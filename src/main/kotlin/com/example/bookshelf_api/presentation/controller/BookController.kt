@@ -8,6 +8,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/books")
@@ -24,9 +25,14 @@ class BookController(private val bookService: BookService) {
     }
 
     @PutMapping("/{id}")
-    fun updateBookTitle(@PathVariable id: Int, @RequestParam("title") title: String): ResponseEntity<OnlyBookResponse> {
+    fun updateBook(
+        @PathVariable id: Int,
+        @RequestParam(required = false) title: String?,
+        @RequestParam(required = false) publicationDate: LocalDate?,
+        @RequestParam(required = false) publisher: String?
+    ): ResponseEntity<OnlyBookResponse> {
         return try {
-            val updatedBook = bookService.updateBookTitle(id, title)
+            val updatedBook = bookService.updateBook(id, title, publicationDate, publisher)
             ResponseEntity.ok(updatedBook)
         } catch (ex: Exception) {
             throw ex

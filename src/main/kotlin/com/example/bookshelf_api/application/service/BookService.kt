@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.http.HttpStatus
+import java.time.LocalDate
 
 @Service
 class BookService(
@@ -79,22 +80,30 @@ class BookService(
     }
 
     @Transactional
-    fun updateBookTitle(id: Int, title: String): OnlyBookResponse {
-        val book = bookRepository.findBookById(id)?.first
+    fun updateBook(id: Int, title: String?, publicationDate: LocalDate?, publisher: String?): OnlyBookResponse {
+        val existingBook = bookRepository.findBookById(id)?.first
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
 
-        val updatedBook = book.copy(title = title)
+        require(title != null || publicationDate != null || publisher != null) {
+            "少なくとも1つのフィールドは提供する必要があります。"
+        }
 
-        val updatedBookResult = bookRepository.updateBook(updatedBook)
+        val updatedBook = existingBook.copy(
+            title = title ?: existingBook.title,
+            publicationDate = publicationDate ?: existingBook.publicationDate,
+            publisher = publisher ?: existingBook.publisher
+        )
+
+        bookRepository.updateBook(updatedBook)
 
         return OnlyBookResponse(
-            id = updatedBookResult.id ?: throw IllegalArgumentException("Book ID cannot be null"),
-            title = updatedBookResult.title,
-            authorId = updatedBookResult.authorId,
-            publicationDate = updatedBookResult.publicationDate,
-            publisher = updatedBookResult.publisher,
-            createdAt = updatedBookResult.createdAt,
-            updatedAt = updatedBookResult.updatedAt
+            id = updatedBook.id!!,
+            title = updatedBook.title,
+            authorId = updatedBook.authorId,
+            publicationDate = updatedBook.publicationDate,
+            publisher = updatedBook.publisher,
+            createdAt = updatedBook.createdAt,
+            updatedAt = updatedBook.updatedAt
         )
     }
 
