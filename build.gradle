@@ -3,6 +3,7 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.24'
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id("org.jooq.jooq-codegen-gradle") version "3.19.11"
 }
 
 group = 'com.example.bookshelf'
@@ -25,6 +26,7 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'org.postgresql:postgresql'
+	jooqCodegen 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -38,4 +40,42 @@ kotlin {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jooq {
+	configuration {
+		jdbc {
+			driver = "org.postgresql.Driver"
+			url = "jdbc:postgresql://localhost:5432/bookshelf_api_db"
+			user = "bookshelf_user"
+			password = "password"
+
+			properties {
+				property {
+					key = "user"
+					value = "bookshelf_user"
+				}
+				property {
+					key = "password"
+					value = "password"
+				}
+			}
+		}
+		generator {
+			database {
+				name = "org.jooq.meta.postgres.PostgresDatabase"
+				inputSchema = "public"
+				includes = ".*"
+				excludes = "flyway_schema_history"
+			}
+			generate {
+				daos = true
+				pojos = true
+			}
+			target {
+				packageName = "com.example.bookshelf_api.infrastructure.jooq.generated"
+				directory = "src/main/kotlin"
+			}
+		}
+	}
 }
