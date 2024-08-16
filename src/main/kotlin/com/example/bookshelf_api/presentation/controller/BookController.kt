@@ -5,7 +5,6 @@ import com.example.bookshelf_api.application.dto.BookResponse
 import com.example.bookshelf_api.application.dto.OnlyBookResponse
 import com.example.bookshelf_api.application.service.BookService
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
@@ -43,5 +42,4 @@ class BookController(private val bookService: BookService) {
             throw ex
         }
     }
-
 }
