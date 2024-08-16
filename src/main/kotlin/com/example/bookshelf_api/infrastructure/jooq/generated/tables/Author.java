@@ -4,18 +4,24 @@
 package com.example.bookshelf_api.infrastructure.jooq.generated.tables;
 
 
+import com.example.bookshelf_api.infrastructure.jooq.generated.Indexes;
 import com.example.bookshelf_api.infrastructure.jooq.generated.Keys;
 import com.example.bookshelf_api.infrastructure.jooq.generated.Public;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book.BookPath;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.AuthorRecord;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
+import org.jooq.Check;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -31,6 +37,7 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -62,6 +69,26 @@ public class Author extends TableImpl<AuthorRecord> {
     public final TableField<AuthorRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
+     * The column <code>public.author.last_name</code>.
+     */
+    public final TableField<AuthorRecord, String> LAST_NAME = createField(DSL.name("last_name"), SQLDataType.VARCHAR(100).nullable(false), this, "");
+
+    /**
+     * The column <code>public.author.first_name</code>.
+     */
+    public final TableField<AuthorRecord, String> FIRST_NAME = createField(DSL.name("first_name"), SQLDataType.VARCHAR(100).nullable(false), this, "");
+
+    /**
+     * The column <code>public.author.birth_date</code>.
+     */
+    public final TableField<AuthorRecord, LocalDate> BIRTH_DATE = createField(DSL.name("birth_date"), SQLDataType.LOCALDATE.nullable(false), this, "");
+
+    /**
+     * The column <code>public.author.gender</code>.
+     */
+    public final TableField<AuthorRecord, String> GENDER = createField(DSL.name("gender"), SQLDataType.VARCHAR(10).nullable(false), this, "");
+
+    /**
      * The column <code>public.author.created_at</code>.
      */
     public final TableField<AuthorRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
@@ -70,16 +97,6 @@ public class Author extends TableImpl<AuthorRecord> {
      * The column <code>public.author.updated_at</code>.
      */
     public final TableField<AuthorRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
-
-    /**
-     * The column <code>public.author.first_name</code>.
-     */
-    public final TableField<AuthorRecord, String> FIRST_NAME = createField(DSL.name("first_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
-     * The column <code>public.author.last_name</code>.
-     */
-    public final TableField<AuthorRecord, String> LAST_NAME = createField(DSL.name("last_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private Author(Name alias, Table<AuthorRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -149,6 +166,11 @@ public class Author extends TableImpl<AuthorRecord> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.IDX_AUTHOR_BIRTH_DATE, Indexes.IDX_AUTHOR_FIRST_NAME, Indexes.IDX_AUTHOR_FULL_NAME, Indexes.IDX_AUTHOR_LAST_NAME);
+    }
+
+    @Override
     public Identity<AuthorRecord, Integer> getIdentity() {
         return (Identity<AuthorRecord, Integer>) super.getIdentity();
     }
@@ -156,6 +178,11 @@ public class Author extends TableImpl<AuthorRecord> {
     @Override
     public UniqueKey<AuthorRecord> getPrimaryKey() {
         return Keys.AUTHOR_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<AuthorRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.AUTHOR_LAST_NAME_FIRST_NAME_BIRTH_DATE_KEY);
     }
 
     private transient BookPath _book;
@@ -168,6 +195,13 @@ public class Author extends TableImpl<AuthorRecord> {
             _book = new BookPath(this, null, Keys.BOOK__BOOK_AUTHOR_ID_FKEY.getInverseKey());
 
         return _book;
+    }
+
+    @Override
+    public List<Check<AuthorRecord>> getChecks() {
+        return Arrays.asList(
+            Internal.createCheck(this, DSL.name("author_gender_check"), "(((gender)::text = ANY ((ARRAY['MALE'::character varying, 'FEMALE'::character varying, 'OTHER'::character varying])::text[])))", true)
+        );
     }
 
     @Override

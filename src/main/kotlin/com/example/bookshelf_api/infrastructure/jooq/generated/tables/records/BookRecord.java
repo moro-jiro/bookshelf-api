@@ -6,6 +6,7 @@ package com.example.bookshelf_api.infrastructure.jooq.generated.tables.records;
 
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.jooq.Record1;
@@ -49,45 +50,73 @@ public class BookRecord extends UpdatableRecordImpl<BookRecord> {
     }
 
     /**
+     * Setter for <code>public.book.publication_date</code>.
+     */
+    public void setPublicationDate(LocalDate value) {
+        set(2, value);
+    }
+
+    /**
+     * Getter for <code>public.book.publication_date</code>.
+     */
+    public LocalDate getPublicationDate() {
+        return (LocalDate) get(2);
+    }
+
+    /**
      * Setter for <code>public.book.author_id</code>.
      */
     public void setAuthorId(Integer value) {
-        set(2, value);
+        set(3, value);
     }
 
     /**
      * Getter for <code>public.book.author_id</code>.
      */
     public Integer getAuthorId() {
-        return (Integer) get(2);
+        return (Integer) get(3);
+    }
+
+    /**
+     * Setter for <code>public.book.publisher</code>.
+     */
+    public void setPublisher(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>public.book.publisher</code>.
+     */
+    public String getPublisher() {
+        return (String) get(4);
     }
 
     /**
      * Setter for <code>public.book.created_at</code>.
      */
     public void setCreatedAt(LocalDateTime value) {
-        set(3, value);
+        set(5, value);
     }
 
     /**
      * Getter for <code>public.book.created_at</code>.
      */
     public LocalDateTime getCreatedAt() {
-        return (LocalDateTime) get(3);
+        return (LocalDateTime) get(5);
     }
 
     /**
      * Setter for <code>public.book.updated_at</code>.
      */
     public void setUpdatedAt(LocalDateTime value) {
-        set(4, value);
+        set(6, value);
     }
 
     /**
      * Getter for <code>public.book.updated_at</code>.
      */
     public LocalDateTime getUpdatedAt() {
-        return (LocalDateTime) get(4);
+        return (LocalDateTime) get(6);
     }
 
     // -------------------------------------------------------------------------
@@ -113,12 +142,14 @@ public class BookRecord extends UpdatableRecordImpl<BookRecord> {
     /**
      * Create a detached, initialised BookRecord
      */
-    public BookRecord(Integer id, String title, Integer authorId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public BookRecord(Integer id, String title, LocalDate publicationDate, Integer authorId, String publisher, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(Book.BOOK);
 
         setId(id);
         setTitle(title);
+        setPublicationDate(publicationDate);
         setAuthorId(authorId);
+        setPublisher(publisher);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
         resetChangedOnNotNull();
@@ -133,7 +164,9 @@ public class BookRecord extends UpdatableRecordImpl<BookRecord> {
         if (value != null) {
             setId(value.getId());
             setTitle(value.getTitle());
+            setPublicationDate(value.getPublicationDate());
             setAuthorId(value.getAuthorId());
+            setPublisher(value.getPublisher());
             setCreatedAt(value.getCreatedAt());
             setUpdatedAt(value.getUpdatedAt());
             resetChangedOnNotNull();

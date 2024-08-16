@@ -4,11 +4,13 @@
 package com.example.bookshelf_api.infrastructure.jooq.generated.tables;
 
 
+import com.example.bookshelf_api.infrastructure.jooq.generated.Indexes;
 import com.example.bookshelf_api.infrastructure.jooq.generated.Keys;
 import com.example.bookshelf_api.infrastructure.jooq.generated.Public;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author.AuthorPath;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.BookRecord;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +20,7 @@ import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -69,9 +72,19 @@ public class Book extends TableImpl<BookRecord> {
     public final TableField<BookRecord, String> TITLE = createField(DSL.name("title"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
+     * The column <code>public.book.publication_date</code>.
+     */
+    public final TableField<BookRecord, LocalDate> PUBLICATION_DATE = createField(DSL.name("publication_date"), SQLDataType.LOCALDATE.nullable(false), this, "");
+
+    /**
      * The column <code>public.book.author_id</code>.
      */
     public final TableField<BookRecord, Integer> AUTHOR_ID = createField(DSL.name("author_id"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>public.book.publisher</code>.
+     */
+    public final TableField<BookRecord, String> PUBLISHER = createField(DSL.name("publisher"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.book.created_at</code>.
@@ -148,6 +161,11 @@ public class Book extends TableImpl<BookRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.IDX_BOOKS_TITLE);
     }
 
     @Override

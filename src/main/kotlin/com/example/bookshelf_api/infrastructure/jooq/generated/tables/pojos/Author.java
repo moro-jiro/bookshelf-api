@@ -5,6 +5,7 @@ package com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -17,33 +18,41 @@ public class Author implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+    private String lastName;
+    private String firstName;
+    private LocalDate birthDate;
+    private String gender;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String firstName;
-    private String lastName;
 
     public Author() {}
 
     public Author(Author value) {
         this.id = value.id;
+        this.lastName = value.lastName;
+        this.firstName = value.firstName;
+        this.birthDate = value.birthDate;
+        this.gender = value.gender;
         this.createdAt = value.createdAt;
         this.updatedAt = value.updatedAt;
-        this.firstName = value.firstName;
-        this.lastName = value.lastName;
     }
 
     public Author(
         Integer id,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
+        String lastName,
         String firstName,
-        String lastName
+        LocalDate birthDate,
+        String gender,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
     ) {
         this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.birthDate = birthDate;
+        this.gender = gender;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     /**
@@ -58,6 +67,62 @@ public class Author implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * Getter for <code>public.author.last_name</code>.
+     */
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    /**
+     * Setter for <code>public.author.last_name</code>.
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * Getter for <code>public.author.first_name</code>.
+     */
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    /**
+     * Setter for <code>public.author.first_name</code>.
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * Getter for <code>public.author.birth_date</code>.
+     */
+    public LocalDate getBirthDate() {
+        return this.birthDate;
+    }
+
+    /**
+     * Setter for <code>public.author.birth_date</code>.
+     */
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    /**
+     * Getter for <code>public.author.gender</code>.
+     */
+    public String getGender() {
+        return this.gender;
+    }
+
+    /**
+     * Setter for <code>public.author.gender</code>.
+     */
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     /**
@@ -88,34 +153,6 @@ public class Author implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    /**
-     * Getter for <code>public.author.first_name</code>.
-     */
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    /**
-     * Setter for <code>public.author.first_name</code>.
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /**
-     * Getter for <code>public.author.last_name</code>.
-     */
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    /**
-     * Setter for <code>public.author.last_name</code>.
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -131,6 +168,30 @@ public class Author implements Serializable {
         }
         else if (!this.id.equals(other.id))
             return false;
+        if (this.lastName == null) {
+            if (other.lastName != null)
+                return false;
+        }
+        else if (!this.lastName.equals(other.lastName))
+            return false;
+        if (this.firstName == null) {
+            if (other.firstName != null)
+                return false;
+        }
+        else if (!this.firstName.equals(other.firstName))
+            return false;
+        if (this.birthDate == null) {
+            if (other.birthDate != null)
+                return false;
+        }
+        else if (!this.birthDate.equals(other.birthDate))
+            return false;
+        if (this.gender == null) {
+            if (other.gender != null)
+                return false;
+        }
+        else if (!this.gender.equals(other.gender))
+            return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -143,18 +204,6 @@ public class Author implements Serializable {
         }
         else if (!this.updatedAt.equals(other.updatedAt))
             return false;
-        if (this.firstName == null) {
-            if (other.firstName != null)
-                return false;
-        }
-        else if (!this.firstName.equals(other.firstName))
-            return false;
-        if (this.lastName == null) {
-            if (other.lastName != null)
-                return false;
-        }
-        else if (!this.lastName.equals(other.lastName))
-            return false;
         return true;
     }
 
@@ -163,10 +212,12 @@ public class Author implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.lastName == null) ? 0 : this.lastName.hashCode());
+        result = prime * result + ((this.firstName == null) ? 0 : this.firstName.hashCode());
+        result = prime * result + ((this.birthDate == null) ? 0 : this.birthDate.hashCode());
+        result = prime * result + ((this.gender == null) ? 0 : this.gender.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
-        result = prime * result + ((this.firstName == null) ? 0 : this.firstName.hashCode());
-        result = prime * result + ((this.lastName == null) ? 0 : this.lastName.hashCode());
         return result;
     }
 
@@ -175,10 +226,12 @@ public class Author implements Serializable {
         StringBuilder sb = new StringBuilder("Author (");
 
         sb.append(id);
+        sb.append(", ").append(lastName);
+        sb.append(", ").append(firstName);
+        sb.append(", ").append(birthDate);
+        sb.append(", ").append(gender);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(updatedAt);
-        sb.append(", ").append(firstName);
-        sb.append(", ").append(lastName);
 
         sb.append(")");
         return sb.toString();

@@ -6,6 +6,7 @@ package com.example.bookshelf_api.infrastructure.jooq.generated.tables.records;
 
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.jooq.Record1;
@@ -35,59 +36,87 @@ public class AuthorRecord extends UpdatableRecordImpl<AuthorRecord> {
     }
 
     /**
-     * Setter for <code>public.author.created_at</code>.
-     */
-    public void setCreatedAt(LocalDateTime value) {
-        set(1, value);
-    }
-
-    /**
-     * Getter for <code>public.author.created_at</code>.
-     */
-    public LocalDateTime getCreatedAt() {
-        return (LocalDateTime) get(1);
-    }
-
-    /**
-     * Setter for <code>public.author.updated_at</code>.
-     */
-    public void setUpdatedAt(LocalDateTime value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>public.author.updated_at</code>.
-     */
-    public LocalDateTime getUpdatedAt() {
-        return (LocalDateTime) get(2);
-    }
-
-    /**
-     * Setter for <code>public.author.first_name</code>.
-     */
-    public void setFirstName(String value) {
-        set(3, value);
-    }
-
-    /**
-     * Getter for <code>public.author.first_name</code>.
-     */
-    public String getFirstName() {
-        return (String) get(3);
-    }
-
-    /**
      * Setter for <code>public.author.last_name</code>.
      */
     public void setLastName(String value) {
-        set(4, value);
+        set(1, value);
     }
 
     /**
      * Getter for <code>public.author.last_name</code>.
      */
     public String getLastName() {
+        return (String) get(1);
+    }
+
+    /**
+     * Setter for <code>public.author.first_name</code>.
+     */
+    public void setFirstName(String value) {
+        set(2, value);
+    }
+
+    /**
+     * Getter for <code>public.author.first_name</code>.
+     */
+    public String getFirstName() {
+        return (String) get(2);
+    }
+
+    /**
+     * Setter for <code>public.author.birth_date</code>.
+     */
+    public void setBirthDate(LocalDate value) {
+        set(3, value);
+    }
+
+    /**
+     * Getter for <code>public.author.birth_date</code>.
+     */
+    public LocalDate getBirthDate() {
+        return (LocalDate) get(3);
+    }
+
+    /**
+     * Setter for <code>public.author.gender</code>.
+     */
+    public void setGender(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>public.author.gender</code>.
+     */
+    public String getGender() {
         return (String) get(4);
+    }
+
+    /**
+     * Setter for <code>public.author.created_at</code>.
+     */
+    public void setCreatedAt(LocalDateTime value) {
+        set(5, value);
+    }
+
+    /**
+     * Getter for <code>public.author.created_at</code>.
+     */
+    public LocalDateTime getCreatedAt() {
+        return (LocalDateTime) get(5);
+    }
+
+    /**
+     * Setter for <code>public.author.updated_at</code>.
+     */
+    public void setUpdatedAt(LocalDateTime value) {
+        set(6, value);
+    }
+
+    /**
+     * Getter for <code>public.author.updated_at</code>.
+     */
+    public LocalDateTime getUpdatedAt() {
+        return (LocalDateTime) get(6);
     }
 
     // -------------------------------------------------------------------------
@@ -113,14 +142,16 @@ public class AuthorRecord extends UpdatableRecordImpl<AuthorRecord> {
     /**
      * Create a detached, initialised AuthorRecord
      */
-    public AuthorRecord(Integer id, LocalDateTime createdAt, LocalDateTime updatedAt, String firstName, String lastName) {
+    public AuthorRecord(Integer id, String lastName, String firstName, LocalDate birthDate, String gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(Author.AUTHOR);
 
         setId(id);
+        setLastName(lastName);
+        setFirstName(firstName);
+        setBirthDate(birthDate);
+        setGender(gender);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
-        setFirstName(firstName);
-        setLastName(lastName);
         resetChangedOnNotNull();
     }
 
@@ -132,10 +163,12 @@ public class AuthorRecord extends UpdatableRecordImpl<AuthorRecord> {
 
         if (value != null) {
             setId(value.getId());
+            setLastName(value.getLastName());
+            setFirstName(value.getFirstName());
+            setBirthDate(value.getBirthDate());
+            setGender(value.getGender());
             setCreatedAt(value.getCreatedAt());
             setUpdatedAt(value.getUpdatedAt());
-            setFirstName(value.getFirstName());
-            setLastName(value.getLastName());
             resetChangedOnNotNull();
         }
     }

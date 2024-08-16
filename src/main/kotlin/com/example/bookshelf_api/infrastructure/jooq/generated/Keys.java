@@ -27,6 +27,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AuthorRecord> AUTHOR_LAST_NAME_FIRST_NAME_BIRTH_DATE_KEY = Internal.createUniqueKey(Author.AUTHOR, DSL.name("author_last_name_first_name_birth_date_key"), new TableField[] { Author.AUTHOR.LAST_NAME, Author.AUTHOR.FIRST_NAME, Author.AUTHOR.BIRTH_DATE }, true);
     public static final UniqueKey<AuthorRecord> AUTHOR_PKEY = Internal.createUniqueKey(Author.AUTHOR, DSL.name("author_pkey"), new TableField[] { Author.AUTHOR.ID }, true);
     public static final UniqueKey<BookRecord> BOOK_PKEY = Internal.createUniqueKey(Book.BOOK, DSL.name("book_pkey"), new TableField[] { Book.BOOK.ID }, true);
 

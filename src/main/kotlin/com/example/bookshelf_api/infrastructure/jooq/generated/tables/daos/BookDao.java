@@ -7,6 +7,7 @@ package com.example.bookshelf_api.infrastructure.jooq.generated.tables.daos;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book;
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.BookRecord;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +86,21 @@ public class BookDao extends DAOImpl<BookRecord, com.example.bookshelf_api.infra
     }
 
     /**
+     * Fetch records that have <code>publication_date BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Book> fetchRangeOfPublicationDate(LocalDate lowerInclusive, LocalDate upperInclusive) {
+        return fetchRange(Book.BOOK.PUBLICATION_DATE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>publication_date IN (values)</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Book> fetchByPublicationDate(LocalDate... values) {
+        return fetch(Book.BOOK.PUBLICATION_DATE, values);
+    }
+
+    /**
      * Fetch records that have <code>author_id BETWEEN lowerInclusive AND
      * upperInclusive</code>
      */
@@ -97,6 +113,21 @@ public class BookDao extends DAOImpl<BookRecord, com.example.bookshelf_api.infra
      */
     public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Book> fetchByAuthorId(Integer... values) {
         return fetch(Book.BOOK.AUTHOR_ID, values);
+    }
+
+    /**
+     * Fetch records that have <code>publisher BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Book> fetchRangeOfPublisher(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Book.BOOK.PUBLISHER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>publisher IN (values)</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Book> fetchByPublisher(String... values) {
+        return fetch(Book.BOOK.PUBLISHER, values);
     }
 
     /**

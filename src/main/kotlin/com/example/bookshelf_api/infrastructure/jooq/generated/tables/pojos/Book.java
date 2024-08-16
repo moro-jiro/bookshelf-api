@@ -5,6 +5,7 @@ package com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -18,7 +19,9 @@ public class Book implements Serializable {
 
     private Integer id;
     private String title;
+    private LocalDate publicationDate;
     private Integer authorId;
+    private String publisher;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -27,7 +30,9 @@ public class Book implements Serializable {
     public Book(Book value) {
         this.id = value.id;
         this.title = value.title;
+        this.publicationDate = value.publicationDate;
         this.authorId = value.authorId;
+        this.publisher = value.publisher;
         this.createdAt = value.createdAt;
         this.updatedAt = value.updatedAt;
     }
@@ -35,13 +40,17 @@ public class Book implements Serializable {
     public Book(
         Integer id,
         String title,
+        LocalDate publicationDate,
         Integer authorId,
+        String publisher,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
     ) {
         this.id = id;
         this.title = title;
+        this.publicationDate = publicationDate;
         this.authorId = authorId;
+        this.publisher = publisher;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -75,6 +84,20 @@ public class Book implements Serializable {
     }
 
     /**
+     * Getter for <code>public.book.publication_date</code>.
+     */
+    public LocalDate getPublicationDate() {
+        return this.publicationDate;
+    }
+
+    /**
+     * Setter for <code>public.book.publication_date</code>.
+     */
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    /**
      * Getter for <code>public.book.author_id</code>.
      */
     public Integer getAuthorId() {
@@ -86,6 +109,20 @@ public class Book implements Serializable {
      */
     public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
+    }
+
+    /**
+     * Getter for <code>public.book.publisher</code>.
+     */
+    public String getPublisher() {
+        return this.publisher;
+    }
+
+    /**
+     * Setter for <code>public.book.publisher</code>.
+     */
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     /**
@@ -137,11 +174,23 @@ public class Book implements Serializable {
         }
         else if (!this.title.equals(other.title))
             return false;
+        if (this.publicationDate == null) {
+            if (other.publicationDate != null)
+                return false;
+        }
+        else if (!this.publicationDate.equals(other.publicationDate))
+            return false;
         if (this.authorId == null) {
             if (other.authorId != null)
                 return false;
         }
         else if (!this.authorId.equals(other.authorId))
+            return false;
+        if (this.publisher == null) {
+            if (other.publisher != null)
+                return false;
+        }
+        else if (!this.publisher.equals(other.publisher))
             return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
@@ -164,7 +213,9 @@ public class Book implements Serializable {
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.title == null) ? 0 : this.title.hashCode());
+        result = prime * result + ((this.publicationDate == null) ? 0 : this.publicationDate.hashCode());
         result = prime * result + ((this.authorId == null) ? 0 : this.authorId.hashCode());
+        result = prime * result + ((this.publisher == null) ? 0 : this.publisher.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
@@ -176,7 +227,9 @@ public class Book implements Serializable {
 
         sb.append(id);
         sb.append(", ").append(title);
+        sb.append(", ").append(publicationDate);
         sb.append(", ").append(authorId);
+        sb.append(", ").append(publisher);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(updatedAt);
 
