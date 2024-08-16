@@ -54,7 +54,7 @@ class BookService(
         return authorRepository.createAuthor(author)
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun getBookById(id: Int): BookResponse {
         val result = bookRepository.findBookById(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
@@ -103,7 +103,7 @@ class BookService(
         )
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun findBooksByTitle(title: String): List<OnlyBookResponse> {
         if (title.isBlank()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "書籍名は必須です")

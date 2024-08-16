@@ -31,6 +31,7 @@ class AuthorService(private val authorRepository: AuthorRepository) {
         }
     }
 
+    @Transactional(readOnly = true)
     fun getAuthorById(id: Int): AuthorResponse {
         val author = authorRepository.findAuthorById(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "著者が見つかりません")
@@ -75,7 +76,7 @@ class AuthorService(private val authorRepository: AuthorRepository) {
         )
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun searchAuthors(searchDto: AuthorSearchDto): List<AuthorResponse> {
         val authors = authorRepository.searchAuthors(searchDto)
         return authors.map { author ->
