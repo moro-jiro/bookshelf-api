@@ -24,7 +24,8 @@ class AuthorServiceTest {
     fun `test createAuthor`() {
         val author = Author().apply {
             id = 1
-            name = "Kojiro Morooka"
+            firstName = "Kojiro"
+            lastName = "Morooka"
         }
 
         authorService.createAuthor(author)
@@ -36,7 +37,8 @@ class AuthorServiceTest {
     fun `test updateAuthor`() {
         val author = Author().apply {
             id = 1
-            name = "Kojiro Morooka"
+            firstName = "Kojiro"
+            lastName = "Morooka"
         }
 
         authorService.updateAuthor(author)
@@ -49,7 +51,8 @@ class AuthorServiceTest {
         val authorId = 1
         val expectedAuthor = Author().apply {
             id = authorId
-            name = "Kojiro Morooka"
+            firstName = "Kojiro"
+            lastName = "Morooka"
         }
 
         Mockito.`when`(authorDao.fetchOneById(authorId)).thenReturn(expectedAuthor)

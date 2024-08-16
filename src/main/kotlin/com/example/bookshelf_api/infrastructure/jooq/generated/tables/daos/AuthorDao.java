@@ -70,21 +70,6 @@ public class AuthorDao extends DAOImpl<AuthorRecord, com.example.bookshelf_api.i
     }
 
     /**
-     * Fetch records that have <code>name BETWEEN lowerInclusive AND
-     * upperInclusive</code>
-     */
-    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchRangeOfName(String lowerInclusive, String upperInclusive) {
-        return fetchRange(Author.AUTHOR.NAME, lowerInclusive, upperInclusive);
-    }
-
-    /**
-     * Fetch records that have <code>name IN (values)</code>
-     */
-    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchByName(String... values) {
-        return fetch(Author.AUTHOR.NAME, values);
-    }
-
-    /**
      * Fetch records that have <code>created_at BETWEEN lowerInclusive AND
      * upperInclusive</code>
      */
@@ -112,5 +97,35 @@ public class AuthorDao extends DAOImpl<AuthorRecord, com.example.bookshelf_api.i
      */
     public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchByUpdatedAt(LocalDateTime... values) {
         return fetch(Author.AUTHOR.UPDATED_AT, values);
+    }
+
+    /**
+     * Fetch records that have <code>first_name BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchRangeOfFirstName(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Author.AUTHOR.FIRST_NAME, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>first_name IN (values)</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchByFirstName(String... values) {
+        return fetch(Author.AUTHOR.FIRST_NAME, values);
+    }
+
+    /**
+     * Fetch records that have <code>last_name BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchRangeOfLastName(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Author.AUTHOR.LAST_NAME, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>last_name IN (values)</code>
+     */
+    public List<com.example.bookshelf_api.infrastructure.jooq.generated.tables.pojos.Author> fetchByLastName(String... values) {
+        return fetch(Author.AUTHOR.LAST_NAME, values);
     }
 }

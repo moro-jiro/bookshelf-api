@@ -17,29 +17,33 @@ public class Author implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String firstName;
+    private String lastName;
 
     public Author() {}
 
     public Author(Author value) {
         this.id = value.id;
-        this.name = value.name;
         this.createdAt = value.createdAt;
         this.updatedAt = value.updatedAt;
+        this.firstName = value.firstName;
+        this.lastName = value.lastName;
     }
 
     public Author(
         Integer id,
-        String name,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        String firstName,
+        String lastName
     ) {
         this.id = id;
-        this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     /**
@@ -54,20 +58,6 @@ public class Author implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    /**
-     * Getter for <code>public.author.name</code>.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Setter for <code>public.author.name</code>.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -98,6 +88,34 @@ public class Author implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+    /**
+     * Getter for <code>public.author.first_name</code>.
+     */
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    /**
+     * Setter for <code>public.author.first_name</code>.
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * Getter for <code>public.author.last_name</code>.
+     */
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    /**
+     * Setter for <code>public.author.last_name</code>.
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -113,12 +131,6 @@ public class Author implements Serializable {
         }
         else if (!this.id.equals(other.id))
             return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -131,6 +143,18 @@ public class Author implements Serializable {
         }
         else if (!this.updatedAt.equals(other.updatedAt))
             return false;
+        if (this.firstName == null) {
+            if (other.firstName != null)
+                return false;
+        }
+        else if (!this.firstName.equals(other.firstName))
+            return false;
+        if (this.lastName == null) {
+            if (other.lastName != null)
+                return false;
+        }
+        else if (!this.lastName.equals(other.lastName))
+            return false;
         return true;
     }
 
@@ -139,9 +163,10 @@ public class Author implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
+        result = prime * result + ((this.firstName == null) ? 0 : this.firstName.hashCode());
+        result = prime * result + ((this.lastName == null) ? 0 : this.lastName.hashCode());
         return result;
     }
 
@@ -150,9 +175,10 @@ public class Author implements Serializable {
         StringBuilder sb = new StringBuilder("Author (");
 
         sb.append(id);
-        sb.append(", ").append(name);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(updatedAt);
+        sb.append(", ").append(firstName);
+        sb.append(", ").append(lastName);
 
         sb.append(")");
         return sb.toString();

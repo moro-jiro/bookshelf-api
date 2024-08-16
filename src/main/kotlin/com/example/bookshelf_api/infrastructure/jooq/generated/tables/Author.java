@@ -62,11 +62,6 @@ public class Author extends TableImpl<AuthorRecord> {
     public final TableField<AuthorRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>public.author.name</code>.
-     */
-    public final TableField<AuthorRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
      * The column <code>public.author.created_at</code>.
      */
     public final TableField<AuthorRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
@@ -75,6 +70,16 @@ public class Author extends TableImpl<AuthorRecord> {
      * The column <code>public.author.updated_at</code>.
      */
     public final TableField<AuthorRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
+
+    /**
+     * The column <code>public.author.first_name</code>.
+     */
+    public final TableField<AuthorRecord, String> FIRST_NAME = createField(DSL.name("first_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>public.author.last_name</code>.
+     */
+    public final TableField<AuthorRecord, String> LAST_NAME = createField(DSL.name("last_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private Author(Name alias, Table<AuthorRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
