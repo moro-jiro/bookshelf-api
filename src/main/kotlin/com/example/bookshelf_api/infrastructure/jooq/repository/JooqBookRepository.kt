@@ -24,12 +24,10 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
             .returning(BookTable.BOOK.ID, BookTable.BOOK.TITLE, BookTable.BOOK.AUTHOR_ID, BookTable.BOOK.PUBLICATION_DATE, BookTable.BOOK.PUBLISHER, BookTable.BOOK.CREATED_AT, BookTable.BOOK.UPDATED_AT)
             .fetchOne()
 
-        // result が null の場合のチェック
         if (result == null) {
             throw RuntimeException("書籍の登録に失敗しました")
         }
 
-        // 手動で値を取り出して Book オブジェクトを作成
         return Book(
             id = result[BookTable.BOOK.ID],
             title = result[BookTable.BOOK.TITLE],
@@ -40,8 +38,6 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
             updatedAt = result[BookTable.BOOK.UPDATED_AT]
         )
     }
-
-
 
     override fun findBookById(id: Int): Pair<Book, Author>? {
         val bookTable = BookTable.BOOK
@@ -68,9 +64,29 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
     }
 
     override fun findBooksByTitle(title: String): List<Book> {
-        return dsl.selectFrom(DSL.table("book"))
+        return dsl.select(
+            BookTable.BOOK.ID,
+            BookTable.BOOK.TITLE,
+            BookTable.BOOK.AUTHOR_ID,
+            BookTable.BOOK.PUBLICATION_DATE,
+            BookTable.BOOK.PUBLISHER,
+            BookTable.BOOK.CREATED_AT,
+            BookTable.BOOK.UPDATED_AT
+        )
+            .from(DSL.table("book"))
             .where(DSL.field("title").likeIgnoreCase("%$title%"))
-            .fetchInto(Book::class.java)
+            .fetch()
+            .map { record ->
+                Book(
+                    id = record.get(BookTable.BOOK.ID),
+                    title = record.get(BookTable.BOOK.TITLE),
+                    authorId = record.get(BookTable.BOOK.AUTHOR_ID),
+                    publicationDate = record.get(BookTable.BOOK.PUBLICATION_DATE),
+                    publisher = record.get(BookTable.BOOK.PUBLISHER),
+                    createdAt = record.get(BookTable.BOOK.CREATED_AT),
+                    updatedAt = record.get(BookTable.BOOK.UPDATED_AT)
+                )
+            }
     }
 
     override fun updateBook(book: Book): Book {
@@ -90,8 +106,28 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
     }
 
     override fun findBooksByAuthorId(authorId: Int): List<Book> {
-        return dsl.selectFrom(BookTable.BOOK)
+        return dsl.select(
+            BookTable.BOOK.ID,
+            BookTable.BOOK.TITLE,
+            BookTable.BOOK.AUTHOR_ID,
+            BookTable.BOOK.PUBLICATION_DATE,
+            BookTable.BOOK.PUBLISHER,
+            BookTable.BOOK.CREATED_AT,
+            BookTable.BOOK.UPDATED_AT
+        )
+            .from(BookTable.BOOK)
             .where(BookTable.BOOK.AUTHOR_ID.eq(authorId))
-            .fetchInto(Book::class.java)
+            .fetch()
+            .map { record ->
+                Book(
+                    id = record.get(BookTable.BOOK.ID),
+                    title = record.get(BookTable.BOOK.TITLE),
+                    authorId = record.get(BookTable.BOOK.AUTHOR_ID),
+                    publicationDate = record.get(BookTable.BOOK.PUBLICATION_DATE),
+                    publisher = record.get(BookTable.BOOK.PUBLISHER),
+                    createdAt = record.get(BookTable.BOOK.CREATED_AT),
+                    updatedAt = record.get(BookTable.BOOK.UPDATED_AT)
+                )
+            }
     }
 }
