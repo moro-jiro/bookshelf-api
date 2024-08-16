@@ -1,8 +1,8 @@
-CREATE TABLE books
+CREATE TABLE book
 (
     id         SERIAL PRIMARY KEY,
     title      VARCHAR(255) NOT NULL,
-    author_id  INT          NOT NULL REFERENCES authors (id) ON DELETE CASCADE,
+    author_id  INT          NOT NULL REFERENCES author (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

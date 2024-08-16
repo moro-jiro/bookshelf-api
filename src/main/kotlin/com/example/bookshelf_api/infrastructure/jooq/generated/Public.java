@@ -4,8 +4,8 @@
 package com.example.bookshelf_api.infrastructure.jooq.generated;
 
 
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Authors;
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Books;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,14 +29,14 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
-     * The table <code>public.authors</code>.
+     * The table <code>public.author</code>.
      */
-    public final Authors AUTHORS = Authors.AUTHORS;
+    public final Author AUTHOR = Author.AUTHOR;
 
     /**
-     * The table <code>public.books</code>.
+     * The table <code>public.book</code>.
      */
-    public final Books BOOKS = Books.BOOKS;
+    public final Book BOOK = Book.BOOK;
 
     /**
      * No further instances allowed
@@ -54,8 +54,8 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Authors.AUTHORS,
-            Books.BOOKS
+            Author.AUTHOR,
+            Book.BOOK
         );
     }
 }

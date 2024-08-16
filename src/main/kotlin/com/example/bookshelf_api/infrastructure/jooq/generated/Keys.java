@@ -4,10 +4,10 @@
 package com.example.bookshelf_api.infrastructure.jooq.generated;
 
 
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Authors;
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Books;
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.AuthorsRecord;
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.BooksRecord;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.AuthorRecord;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.records.BookRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -27,12 +27,12 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AuthorsRecord> AUTHORS_PKEY = Internal.createUniqueKey(Authors.AUTHORS, DSL.name("authors_pkey"), new TableField[] { Authors.AUTHORS.ID }, true);
-    public static final UniqueKey<BooksRecord> BOOKS_PKEY = Internal.createUniqueKey(Books.BOOKS, DSL.name("books_pkey"), new TableField[] { Books.BOOKS.ID }, true);
+    public static final UniqueKey<AuthorRecord> AUTHOR_PKEY = Internal.createUniqueKey(Author.AUTHOR, DSL.name("author_pkey"), new TableField[] { Author.AUTHOR.ID }, true);
+    public static final UniqueKey<BookRecord> BOOK_PKEY = Internal.createUniqueKey(Book.BOOK, DSL.name("book_pkey"), new TableField[] { Book.BOOK.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<BooksRecord, AuthorsRecord> BOOKS__BOOKS_AUTHOR_ID_FKEY = Internal.createForeignKey(Books.BOOKS, DSL.name("books_author_id_fkey"), new TableField[] { Books.BOOKS.AUTHOR_ID }, Keys.AUTHORS_PKEY, new TableField[] { Authors.AUTHORS.ID }, true);
+    public static final ForeignKey<BookRecord, AuthorRecord> BOOK__BOOK_AUTHOR_ID_FKEY = Internal.createForeignKey(Book.BOOK, DSL.name("book_author_id_fkey"), new TableField[] { Book.BOOK.AUTHOR_ID }, Keys.AUTHOR_PKEY, new TableField[] { Author.AUTHOR.ID }, true);
 }

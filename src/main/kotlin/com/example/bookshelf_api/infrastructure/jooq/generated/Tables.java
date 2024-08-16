@@ -4,8 +4,8 @@
 package com.example.bookshelf_api.infrastructure.jooq.generated;
 
 
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Authors;
-import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Books;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author;
+import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book;
 
 
 /**
@@ -15,12 +15,12 @@ import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Books;
 public class Tables {
 
     /**
-     * The table <code>public.authors</code>.
+     * The table <code>public.author</code>.
      */
-    public static final Authors AUTHORS = Authors.AUTHORS;
+    public static final Author AUTHOR = Author.AUTHOR;
 
     /**
-     * The table <code>public.books</code>.
+     * The table <code>public.book</code>.
      */
-    public static final Books BOOKS = Books.BOOKS;
+    public static final Book BOOK = Book.BOOK;
 }
