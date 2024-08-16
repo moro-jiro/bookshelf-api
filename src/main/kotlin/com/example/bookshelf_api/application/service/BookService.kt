@@ -1,9 +1,6 @@
 package com.example.bookshelf_api.application.service
 
-import com.example.bookshelf_api.application.dto.BookCreationRequest
-import com.example.bookshelf_api.application.dto.BookResponse
-import com.example.bookshelf_api.application.dto.AuthorDto
-import com.example.bookshelf_api.application.dto.AuthorResponse
+import com.example.bookshelf_api.application.dto.*
 import com.example.bookshelf_api.domain.model.Book
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
@@ -77,6 +74,25 @@ class BookService(
             publisher = bookModel.publisher,
             createdAt = bookModel.createdAt,
             updatedAt = bookModel.updatedAt
+        )
+    }
+
+    @Transactional
+    fun updateBookTitle(id: Int, title: String): OnlyBookResponse {
+        val book = bookRepository.findBookById(id)?.first
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
+
+        val updatedBook = book.copy(title = title)
+
+        bookRepository.createBook(updatedBook)
+
+        return OnlyBookResponse(
+            id = updatedBook.id!!,
+            title = updatedBook.title,
+            publicationDate = updatedBook.publicationDate,
+            publisher = updatedBook.publisher,
+            createdAt = updatedBook.createdAt,
+            updatedAt = updatedBook.updatedAt
         )
     }
 }

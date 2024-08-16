@@ -30,3 +30,12 @@ data class BookResponse(
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )
+
+data class OnlyBookResponse(
+    val id: Int,
+    val title: String,
+    val publicationDate: LocalDate,
+    val publisher: String,
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?
+)

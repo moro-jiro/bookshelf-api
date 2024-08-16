@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class Book(
     val id: Int? = null,
-    val title: String = "",
+    var title: String = "",
     val authorId: Int = 0,
     val publicationDate: LocalDate = LocalDate.now(),
     val publisher: String = "",
