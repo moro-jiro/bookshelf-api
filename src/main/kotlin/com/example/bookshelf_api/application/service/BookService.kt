@@ -28,7 +28,7 @@ class BookService @Autowired constructor(
 
     @Transactional(readOnly = true)
     fun findBooksByAuthorId(authorId: Int): List<Book> {
-        return bookDao.fetchByAuthorId(authorId)
+        return bookDao.fetchByAuthorId(authorId) ?: emptyList()
     }
 
     @Transactional

@@ -97,6 +97,17 @@ class BookServiceTest {
     }
 
     @Test
+    fun `test findBooksByAuthorId returns empty list`() {
+        val authorId = 1
+
+        Mockito.`when`(bookDao.fetchByAuthorId(authorId)).thenReturn(emptyList())
+
+        val actualBooks = bookService.findBooksByAuthorId(authorId)
+
+        assertEquals(emptyList<Book>(), actualBooks)
+    }
+
+    @Test
     fun `test deleteBookById`() {
         val bookId = 1
 
