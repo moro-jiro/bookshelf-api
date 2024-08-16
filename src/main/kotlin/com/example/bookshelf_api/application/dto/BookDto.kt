@@ -21,6 +21,20 @@ data class BookDto(
     val publisher: String
 )
 
+data class UpdateBookDto(
+    @field:NotBlank(message = "タイトルは必須です")
+    @field:Size(max = 255, message = "タイトルは255文字以内で入力してください")
+    val title: String,
+
+    @field:NotNull(message = "出版日は必須です")
+    @field:PastOrPresent(message = "出版日は現在以前の日付である必要があります")
+    val publicationDate: LocalDate,
+
+    @field:NotBlank(message = "出版社は必須です")
+    @field:Size(max = 255, message = "出版社名は255文字以内で入力してください")
+    val publisher: String
+)
+
 data class BookResponse(
     val id: Int,
     val title: String,

@@ -80,14 +80,14 @@ class BookService(
     }
 
     @Transactional
-    fun updateBook(id: Int, bookDto: BookDto): OnlyBookResponse {
+    fun updateBook(id: Int, updateBookDto: UpdateBookDto): OnlyBookResponse {
         val existingBook = bookRepository.findBookById(id)?.first
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
 
         val updatedBook = existingBook.copy(
-            title = bookDto.title,
-            publicationDate = bookDto.publicationDate,
-            publisher = bookDto.publisher
+            title = updateBookDto.title,
+            publicationDate = updateBookDto.publicationDate,
+            publisher = updateBookDto.publisher
         )
 
         bookRepository.updateBook(updatedBook)

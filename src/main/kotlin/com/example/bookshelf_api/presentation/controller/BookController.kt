@@ -3,6 +3,7 @@ package com.example.bookshelf_api.presentation.controller
 import com.example.bookshelf_api.application.dto.BookDto
 import com.example.bookshelf_api.application.dto.BookResponse
 import com.example.bookshelf_api.application.dto.OnlyBookResponse
+import com.example.bookshelf_api.application.dto.UpdateBookDto
 import com.example.bookshelf_api.application.service.BookService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -27,10 +28,10 @@ class BookController(private val bookService: BookService) {
     @PutMapping("/{id}")
     fun updateBook(
         @PathVariable id: Int,
-        @RequestBody bookDto: BookDto
+        @RequestBody updateBookDto: UpdateBookDto
     ): ResponseEntity<OnlyBookResponse> {
         return try {
-            val updatedBook = bookService.updateBook(id, bookDto)
+            val updatedBook = bookService.updateBook(id, updateBookDto)
             ResponseEntity.ok(updatedBook)
         } catch (ex: Exception) {
             throw ex

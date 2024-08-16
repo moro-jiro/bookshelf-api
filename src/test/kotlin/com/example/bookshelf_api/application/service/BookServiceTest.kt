@@ -2,6 +2,7 @@ package com.example.bookshelf_api.application.service
 
 import com.example.bookshelf_api.application.dto.AuthorDto
 import com.example.bookshelf_api.application.dto.BookDto
+import com.example.bookshelf_api.application.dto.UpdateBookDto
 import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.model.Book
 import com.example.bookshelf_api.domain.repository.AuthorRepository
@@ -161,14 +162,8 @@ class BookServiceTest {
     @Test
     fun `updateBook should update the book's fields and return OnlyBookResponse`() {
         val bookId = 1
-        val bookDto = BookDto(
+        val updateBookDto = UpdateBookDto(
             title = "Updated Title",
-            author = AuthorDto(
-                firstName = "John",
-                lastName = "Doe",
-                birthDate = LocalDate.of(1970, 1, 1),
-                gender = "Male"
-            ),
             publicationDate = LocalDate.of(2021, 1, 1),
             publisher = "Updated Publisher"
         )
@@ -183,9 +178,9 @@ class BookServiceTest {
         )
 
         val updatedBook = existingBook.copy(
-            title = bookDto.title,
-            publicationDate = bookDto.publicationDate,
-            publisher = bookDto.publisher
+            title = updateBookDto.title,
+            publicationDate = updateBookDto.publicationDate,
+            publisher = updateBookDto.publisher
         )
 
         val author = Author(
@@ -201,12 +196,12 @@ class BookServiceTest {
         `when`(bookRepository.findBookById(bookId)).thenReturn(Pair(existingBook, author))
         `when`(bookRepository.updateBook(updatedBook)).thenReturn(updatedBook)
 
-        val response = bookService.updateBook(bookId, bookDto)
+        val response = bookService.updateBook(bookId, updateBookDto)
 
         assertNotNull(response)
-        assertEquals(bookDto.title, response.title)
-        assertEquals(bookDto.publicationDate, response.publicationDate)
-        assertEquals(bookDto.publisher, response.publisher)
+        assertEquals(updateBookDto.title, response.title)
+        assertEquals(updateBookDto.publicationDate, response.publicationDate)
+        assertEquals(updateBookDto.publisher, response.publisher)
         assertEquals(bookId, response.id)
 
         verify(bookRepository).findBookById(bookId)
@@ -216,14 +211,8 @@ class BookServiceTest {
     @Test
     fun `updateBook should throw ResponseStatusException when book is not found`() {
         val bookId = 1
-        val bookDto = BookDto(
+        val updateBookDto = UpdateBookDto(
             title = "Updated Title",
-            author = AuthorDto(
-                firstName = "John",
-                lastName = "Doe",
-                birthDate = LocalDate.of(1970, 1, 1),
-                gender = "Male"
-            ),
             publicationDate = LocalDate.of(2021, 1, 1),
             publisher = "Updated Publisher"
         )
@@ -241,7 +230,7 @@ class BookServiceTest {
         `when`(bookRepository.findBookById(bookId)).thenReturn(null)
 
         val exception = assertThrows<ResponseStatusException> {
-            bookService.updateBook(bookId, bookDto)
+            bookService.updateBook(bookId, updateBookDto)
         }
 
         assertEquals("404 NOT_FOUND \"書籍が見つかりません\"", exception.message)
