@@ -6,7 +6,7 @@ plugins {
 	id("org.jooq.jooq-codegen-gradle") version "3.19.11"
 }
 
-group = 'com.example.bookshelf'
+group = 'com.example.bookshelf_api'
 version = '0.0.1-SNAPSHOT'
 
 java {
