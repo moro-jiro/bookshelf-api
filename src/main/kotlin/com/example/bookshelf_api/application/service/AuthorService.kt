@@ -36,15 +36,7 @@ class AuthorService(private val authorRepository: AuthorRepository) {
         val author = authorRepository.findAuthorById(id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "著者が見つかりません")
 
-        return AuthorResponse(
-            id = author.id ?: throw IllegalArgumentException("Author ID cannot be null"),
-            firstName = author.firstName,
-            lastName = author.lastName,
-            birthDate = author.birthDate,
-            gender = author.gender,
-            createdAt = author.createdAt,
-            updatedAt = author.updatedAt
-        )
+        return author.toAuthorResponse()
     }
 
     @Transactional
@@ -65,30 +57,26 @@ class AuthorService(private val authorRepository: AuthorRepository) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "著者の更新中にエラーが発生しました: ${ex.message}")
         }
 
-        return AuthorResponse(
-            id = updatedAuthor.id ?: throw IllegalArgumentException("Author ID cannot be null"),
-            firstName = updatedAuthor.firstName,
-            lastName = updatedAuthor.lastName,
-            birthDate = updatedAuthor.birthDate,
-            gender = updatedAuthor.gender,
-            createdAt = updatedAuthor.createdAt,
-            updatedAt = updatedAuthor.updatedAt
-        )
+        return updatedAuthor.toAuthorResponse()
     }
 
     @Transactional(readOnly = true)
     fun searchAuthors(searchDto: AuthorSearchDto): List<AuthorResponse> {
         val authors = authorRepository.searchAuthors(searchDto)
         return authors.map { author ->
-            AuthorResponse(
-                id = author.id ?: throw IllegalArgumentException("Author ID cannot be null"),
-                firstName = author.firstName,
-                lastName = author.lastName,
-                birthDate = author.birthDate,
-                gender = author.gender,
-                createdAt = author.createdAt,
-                updatedAt = author.updatedAt
-            )
+            author.toAuthorResponse()
         }
+    }
+
+    private fun Author.toAuthorResponse(): AuthorResponse {
+        return AuthorResponse(
+            id = this.id ?: throw IllegalArgumentException("Author ID cannot be null"),
+            firstName = this.firstName,
+            lastName = this.lastName,
+            birthDate = this.birthDate,
+            gender = this.gender,
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt
+        )
     }
 }

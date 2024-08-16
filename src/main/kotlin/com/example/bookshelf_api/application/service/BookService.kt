@@ -29,7 +29,7 @@ class BookService(
 
         val insertedBook = bookRepository.createBook(book)
 
-        return getBookById(insertedBook.id!!)
+        return getBookById(insertedBook.id ?: throw IllegalArgumentException("Book ID cannot be null"))
     }
 
     private fun findOrCreateAuthor(authorDto: AuthorDto): Int {
@@ -59,23 +59,7 @@ class BookService(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "書籍が見つかりません")
 
         val (bookModel, authorModel) = result
-        return BookResponse(
-            id = bookModel.id!!,
-            title = bookModel.title,
-            author = AuthorResponse(
-                id = authorModel.id ?: throw IllegalArgumentException("Author ID cannot be null"),
-                firstName = authorModel.firstName,
-                lastName = authorModel.lastName,
-                birthDate = authorModel.birthDate,
-                gender = authorModel.gender,
-                createdAt = authorModel.createdAt,
-                updatedAt = authorModel.updatedAt
-            ),
-            publicationDate = bookModel.publicationDate,
-            publisher = bookModel.publisher,
-            createdAt = bookModel.createdAt,
-            updatedAt = bookModel.updatedAt
-        )
+        return bookModel.toBookResponse(authorModel)
     }
 
     @Transactional
@@ -91,15 +75,7 @@ class BookService(
 
         bookRepository.updateBook(updatedBook)
 
-        return OnlyBookResponse(
-            id = updatedBook.id!!,
-            title = updatedBook.title,
-            authorId = updatedBook.authorId,
-            publicationDate = updatedBook.publicationDate,
-            publisher = updatedBook.publisher,
-            createdAt = updatedBook.createdAt,
-            updatedAt = updatedBook.updatedAt
-        )
+        return updatedBook.toOnlyBookResponse()
     }
 
     @Transactional(readOnly = true)
@@ -109,15 +85,7 @@ class BookService(
         }
         val books = bookRepository.findBooksByTitle(title)
         return books.map { book ->
-            OnlyBookResponse(
-                id = book.id!!,
-                title = book.title,
-                authorId = book.authorId,
-                publicationDate = book.publicationDate,
-                publisher = book.publisher,
-                createdAt = book.createdAt,
-                updatedAt = book.updatedAt
-            )
+            book.toOnlyBookResponse()
         }
     }
 
@@ -125,15 +93,43 @@ class BookService(
     fun getBooksByAuthorId(authorId: Int): List<OnlyBookResponse> {
         val books = bookRepository.findBooksByAuthorId(authorId)
         return books.map { book ->
-            OnlyBookResponse (
-                id = book.id ?: throw IllegalArgumentException("Book ID cannot be null"),
-                title = book.title,
-                authorId = book.authorId,
-                publicationDate = book.publicationDate,
-                publisher = book.publisher,
-                createdAt = book.createdAt,
-                updatedAt = book.updatedAt
-            )
+            book.toOnlyBookResponse()
         }
+    }
+
+    private fun Book.toOnlyBookResponse(): OnlyBookResponse {
+        return OnlyBookResponse(
+            id = this.id ?: throw IllegalArgumentException("Book ID cannot be null"),
+            title = this.title,
+            authorId = this.authorId,
+            publicationDate = this.publicationDate,
+            publisher = this.publisher,
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt
+        )
+    }
+
+    private fun Book.toBookResponse(author: Author): BookResponse {
+        return BookResponse(
+            id = this.id ?: throw IllegalArgumentException("Book ID cannot be null"),
+            title = this.title,
+            author = author.toAuthorResponse(),
+            publicationDate = this.publicationDate,
+            publisher = this.publisher,
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt
+        )
+    }
+
+    private fun Author.toAuthorResponse(): AuthorResponse {
+        return AuthorResponse(
+            id = this.id ?: throw IllegalArgumentException("Author ID cannot be null"),
+            firstName = this.firstName,
+            lastName = this.lastName,
+            birthDate = this.birthDate,
+            gender = this.gender,
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt
+        )
     }
 }

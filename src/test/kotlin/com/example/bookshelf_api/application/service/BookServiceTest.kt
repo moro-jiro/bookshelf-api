@@ -69,6 +69,41 @@ class BookServiceTest {
     }
 
     @Test
+    fun `createBook should throw IllegalArgumentException when book ID is null`() {
+        val authorDto = AuthorDto(
+            firstName = "John",
+            lastName = "Doe",
+            birthDate = LocalDate.of(1990, 1, 1),
+            gender = "Male"
+        )
+
+        val bookRequest = BookDto(
+            title = "Sample Book",
+            author = authorDto,
+            publicationDate = LocalDate.of(2024, 8, 1),
+            publisher = "Sample Publisher"
+        )
+
+        val book = Book(
+            id = null,
+            title = "Sample Book",
+            authorId = 1,
+            publicationDate = LocalDate.of(2024, 8, 1),
+            publisher = "Sample Publisher"
+        )
+
+        `when`(authorRepository.findAuthorByDetails("John", "Doe", LocalDate.of(1990, 1, 1)))
+            .thenReturn(Author(id = 1, firstName = "John", lastName = "Doe", birthDate = LocalDate.of(1990, 1, 1), gender = "Male"))
+        `when`(bookRepository.createBook(any(Book::class.java) ?: Book())).thenReturn(book)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.createBook(bookRequest)
+        }
+
+        assertEquals("Book ID cannot be null", exception.message)
+    }
+
+    @Test
     fun `getBookById should return BookResponse when book is found`() {
         val author = Author(
             id = 1,
@@ -110,6 +145,68 @@ class BookServiceTest {
         }
 
         assertEquals("404 NOT_FOUND \"書籍が見つかりません\"", exception.message)
+    }
+
+    @Test
+    fun `getBookById should throw IllegalArgumentException when book ID is null`() {
+        val author = Author(
+            id = 1,
+            firstName = "John",
+            lastName = "Doe",
+            birthDate = LocalDate.of(1990, 1, 1),
+            gender = "Male",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        val book = Book(
+            id = null,
+            title = "Sample Book",
+            authorId = 1,
+            publicationDate = LocalDate.of(2024, 8, 1),
+            publisher = "Sample Publisher",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        `when`(bookRepository.findBookById(1)).thenReturn(Pair(book, author))
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.getBookById(1)
+        }
+
+        assertEquals("Book ID cannot be null", exception.message)
+    }
+
+    @Test
+    fun `getBookById should throw IllegalArgumentException when author ID is null`() {
+        val author = Author(
+            id = null,
+            firstName = "John",
+            lastName = "Doe",
+            birthDate = LocalDate.of(1990, 1, 1),
+            gender = "Male",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        val book = Book(
+            id = 1,
+            title = "Sample Book",
+            authorId = 1,
+            publicationDate = LocalDate.of(2024, 8, 1),
+            publisher = "Sample Publisher",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        `when`(bookRepository.findBookById(1)).thenReturn(Pair(book, author))
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.getBookById(1)
+        }
+
+        assertEquals("Author ID cannot be null", exception.message)
     }
 
     @Test
