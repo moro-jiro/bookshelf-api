@@ -4,6 +4,7 @@ import com.example.bookshelf_api.domain.model.Author
 import com.example.bookshelf_api.domain.repository.AuthorRepository
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author as AuthorTable
 import org.jooq.DSLContext
+import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
@@ -34,5 +35,17 @@ class JooqAuthorRepository(private val dsl: DSLContext) : AuthorRepository {
             .and(authorTable.LAST_NAME.eq(lastName))
             .and(authorTable.BIRTH_DATE.eq(birthDate))
             .fetchOneInto(Author::class.java)
+    }
+
+    override fun findAuthorById(id: Int): Author? {
+        val authorTable = DSL.table("authors")
+        val record = dsl.select()
+            .from(authorTable)
+            .where(DSL.field("id").eq(id))
+            .fetchOne()
+
+        return record?.let {
+            it.into(authorTable).into(Author::class.java)
+        }
     }
 }
