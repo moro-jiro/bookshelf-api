@@ -6,8 +6,8 @@ import com.example.bookshelf_api.domain.repository.BookRepository
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Book as BookTable
 import com.example.bookshelf_api.infrastructure.jooq.generated.tables.Author as AuthorTable
 import org.jooq.DSLContext
+import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Repository
@@ -43,4 +43,11 @@ class JooqBookRepository(private val dsl: DSLContext) : BookRepository {
                 Pair(book, author)
             }
     }
+
+    override fun findBooksByTitle(title: String): List<Book> {
+        return dsl.selectFrom(DSL.table("book"))
+            .where(DSL.field("title").likeIgnoreCase("%$title%"))
+            .fetchInto(Book::class.java)
+    }
+
 }

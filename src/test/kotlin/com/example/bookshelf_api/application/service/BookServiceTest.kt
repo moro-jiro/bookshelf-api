@@ -223,4 +223,47 @@ class BookServiceTest {
         verify(bookRepository).findBookById(bookId)
         verify(bookRepository, never()).createBook(fictitiousBook)
     }
+
+    @Test
+    fun `findBooksByTitle should return a list of OnlyBookResponse when books are found`() {
+        val title = "Book Title"
+        val book1 = Book(
+            id = 1,
+            title = title,
+            authorId = 1,
+            publicationDate = LocalDate.of(2020, 1, 1),
+            publisher = "Publisher",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        val book2 = Book(
+            id = 2,
+            title = title,
+            authorId = 2,
+            publicationDate = LocalDate.of(2021, 2, 2),
+            publisher = "Another Publisher",
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
+        )
+
+        `when`(bookRepository.findBooksByTitle(title)).thenReturn(listOf(book1, book2))
+
+        val responses = bookService.findBooksByTitle(title)
+
+        assertEquals(2, responses.size)
+        assertEquals(title, responses[0].title)
+        assertEquals(title, responses[1].title)
+    }
+
+    @Test
+    fun `findBooksByTitle should throw ResponseStatusException when title is blank`() {
+        val title = ""
+
+        val exception = assertThrows<ResponseStatusException> {
+            bookService.findBooksByTitle(title)
+        }
+
+        assertEquals("400 BAD_REQUEST \"書籍名は必須です\"", exception.message)
+    }
 }

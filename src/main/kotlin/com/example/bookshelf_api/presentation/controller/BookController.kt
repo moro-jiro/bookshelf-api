@@ -5,8 +5,10 @@ import com.example.bookshelf_api.application.dto.BookResponse
 import com.example.bookshelf_api.application.dto.OnlyBookResponse
 import com.example.bookshelf_api.application.service.BookService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/books")
@@ -31,4 +33,15 @@ class BookController(private val bookService: BookService) {
             throw ex
         }
     }
+
+    @GetMapping("/search")
+    fun searchBooks(@RequestParam title: String): ResponseEntity<List<OnlyBookResponse>> {
+        try {
+            val books = bookService.findBooksByTitle(title)
+            return ResponseEntity.ok(books)
+        } catch (ex: ResponseStatusException) {
+            throw ex
+        }
+    }
+
 }
