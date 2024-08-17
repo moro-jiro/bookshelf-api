@@ -6,6 +6,7 @@ import com.example.bookshelf_api.application.dto.AuthorSearchDto
 import com.example.bookshelf_api.application.dto.OnlyBookResponse
 import com.example.bookshelf_api.application.service.AuthorService
 import com.example.bookshelf_api.application.service.BookService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -20,7 +21,7 @@ class AuthorController(
 ) {
 
     @PostMapping("/register")
-    fun createAuthor(@RequestBody authorDto: AuthorDto): ResponseEntity<AuthorResponse> {
+    fun createAuthor(@Valid @RequestBody authorDto: AuthorDto): ResponseEntity<AuthorResponse> {
         try {
             val authorResponse = authorService.createAuthor(authorDto)
             return ResponseEntity.status(HttpStatus.CREATED).body(authorResponse)
@@ -32,7 +33,7 @@ class AuthorController(
     @PutMapping("/{id}")
     fun updateAuthor(
         @PathVariable id: Int,
-        @RequestBody authorDto: AuthorDto
+        @Valid @RequestBody authorDto: AuthorDto
     ): ResponseEntity<AuthorResponse> {
         val updatedAuthor = authorService.updateAuthor(id, authorDto)
         return ResponseEntity.ok(updatedAuthor)

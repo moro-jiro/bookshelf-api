@@ -1,5 +1,6 @@
 package com.example.bookshelf_api.application.dto
 
+import jakarta.validation.Valid
 import java.time.LocalDate
 import jakarta.validation.constraints.*
 import java.time.LocalDateTime
@@ -10,6 +11,7 @@ data class BookDto(
     val title: String,
 
     @field:NotNull(message = "著者情報は必須です")
+    @field:Valid
     val author: AuthorDto,
 
     @field:NotNull(message = "出版日は必須です")

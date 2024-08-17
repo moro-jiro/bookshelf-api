@@ -27,7 +27,7 @@ class BookController(private val bookService: BookService) {
     @PutMapping("/{id}")
     fun updateBook(
         @PathVariable id: Int,
-        @RequestBody updateBookDto: UpdateBookDto
+        @Valid @RequestBody updateBookDto: UpdateBookDto
     ): ResponseEntity<OnlyBookResponse> {
         return try {
             val updatedBook = bookService.updateBook(id, updateBookDto)
