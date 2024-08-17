@@ -50,6 +50,7 @@ class JooqBookRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should create book successfully`() {
         val insertStep = mock(InsertSetStep::class.java) as InsertSetStep<BookRecord>
         val insertMoreStep = mock(InsertSetMoreStep::class.java) as InsertSetMoreStep<BookRecord>
@@ -84,6 +85,7 @@ class JooqBookRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should find book by ID`() {
         val selectStep = mock(SelectSelectStep::class.java) as SelectSelectStep<Record>
         val joinStep = mock(SelectJoinStep::class.java) as SelectJoinStep<Record>
@@ -108,6 +110,7 @@ class JooqBookRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should find books by title`() {
         val records = mock(Result::class.java) as Result<BookRecord>
 
@@ -129,6 +132,7 @@ class JooqBookRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should update book successfully`() {
         val updateStep = mock(UpdateSetFirstStep::class.java) as UpdateSetFirstStep<BookRecord>
         val updateMoreStep = mock(UpdateSetMoreStep::class.java) as UpdateSetMoreStep<BookRecord>
@@ -143,7 +147,6 @@ class JooqBookRepositoryTest {
         `when`(updateConditionStep.returning()).thenReturn(updateResultStep)
         `when`(updateResultStep.fetchOne()).thenReturn(record)
 
-        // BookRecord のフィールドに適切な値を設定
         `when`(record.get(BookTable.BOOK.ID)).thenReturn(sampleBook.id)
         `when`(record.get(BookTable.BOOK.TITLE)).thenReturn(sampleBook.title)
         `when`(record.get(BookTable.BOOK.AUTHOR_ID)).thenReturn(sampleBook.authorId)
@@ -156,7 +159,6 @@ class JooqBookRepositoryTest {
         assertNotNull(result)
         assertEquals(sampleBook, result)
 
-        // Verify statements
         verify(dsl).update(BookTable.BOOK)
         verify(updateStep).set(any<Map<Field<*>, Any?>>())
         verify(updateMoreStep).set(eq(BookTable.BOOK.UPDATED_AT), any(LocalDateTime::class.java))
@@ -167,20 +169,16 @@ class JooqBookRepositoryTest {
 
     @Test
     fun `should find books by author ID`() {
-        // モックオブジェクトの設定
         val selectWhereStep: SelectWhereStep<BookRecord> = mock()
         val selectConditionStep: SelectConditionStep<BookRecord> = mock()
         val record: BookRecord = mock()
 
-        // DSLContext のモック
         `when`(dsl.selectFrom(BookTable.BOOK)).thenReturn(selectWhereStep)
         `when`(selectWhereStep.where(BookTable.BOOK.AUTHOR_ID.eq(sampleAuthor.id!!))).thenReturn(selectConditionStep)
 
-        // Result<BookRecord> のモック
         val mockResult: Result<BookRecord> = mock()
         `when`(selectConditionStep.fetch()).thenReturn(mockResult)
 
-        // BookRecord のモック
         `when`(record.get(BookTable.BOOK.ID)).thenReturn(sampleBook.id)
         `when`(record.get(BookTable.BOOK.TITLE)).thenReturn(sampleBook.title)
         `when`(record.get(BookTable.BOOK.AUTHOR_ID)).thenReturn(sampleBook.authorId)
@@ -189,24 +187,19 @@ class JooqBookRepositoryTest {
         `when`(record.get(BookTable.BOOK.CREATED_AT)).thenReturn(sampleBook.createdAt)
         `when`(record.get(BookTable.BOOK.UPDATED_AT)).thenReturn(sampleBook.updatedAt)
 
-        // Result.map() のモック
         `when`(mockResult.map(any<RecordMapper<BookRecord, Book>>())).thenAnswer { invocation ->
             val mapper = invocation.getArgument<RecordMapper<BookRecord, Book>>(0)
             listOf(mapper.map(record))
         }
 
-        // テスト実行
         val result = repository.findBooksByAuthorId(sampleAuthor.id!!)
 
-        // デバッグ用ログ出力
         println("Test Result: $result")
 
-        // 検証
         assertNotNull(result)
         assertEquals(1, result.size)
         assertEquals(sampleBook, result[0])
 
-        // モックの呼び出し回数の検証
         verify(dsl).selectFrom(BookTable.BOOK)
         verify(selectWhereStep).where(BookTable.BOOK.AUTHOR_ID.eq(sampleAuthor.id!!))
         verify(selectConditionStep).fetch()

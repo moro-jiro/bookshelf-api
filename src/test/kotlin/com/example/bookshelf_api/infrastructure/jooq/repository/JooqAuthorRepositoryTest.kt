@@ -39,6 +39,7 @@ class JooqAuthorRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should create author successfully`() {
         val insertStep = mock(InsertSetStep::class.java) as InsertSetStep<AuthorRecord>
         val insertMoreStep = mock(InsertSetMoreStep::class.java) as InsertSetMoreStep<AuthorRecord>
@@ -74,6 +75,7 @@ class JooqAuthorRepositoryTest {
 
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should find author by details`() {
         val selectFromStep = mock(SelectFromStep::class.java) as SelectFromStep<AuthorRecord>
         val conditionStep = mock(SelectConditionStep::class.java) as SelectConditionStep<AuthorRecord>
@@ -98,6 +100,7 @@ class JooqAuthorRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should update author successfully`() {
         val updateSetFirstStep = mock(UpdateSetFirstStep::class.java) as UpdateSetFirstStep<AuthorRecord>
         val updateSetMoreStep = mock(UpdateSetMoreStep::class.java) as UpdateSetMoreStep<AuthorRecord>
@@ -136,6 +139,7 @@ class JooqAuthorRepositoryTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should search authors`() {
         val selectFromStep = mock(SelectFromStep::class.java) as SelectFromStep<AuthorRecord>
         val selectConditionStep = mock(SelectConditionStep::class.java) as SelectConditionStep<AuthorRecord>
